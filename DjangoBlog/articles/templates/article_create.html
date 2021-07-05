@@ -7,4 +7,11 @@
     {{form}}
     <input type="submit" value="Create">
 </form>
+<br>
+<hr>
+<form action='./' method="POST" class="form-site" enctype="multipart/form-data">
+    {%csrf_token%}
+    {{biptex}}
+    <input type="submit" name="bibtexUpload" value="Populate">
+</form>
 {% endblock %}
