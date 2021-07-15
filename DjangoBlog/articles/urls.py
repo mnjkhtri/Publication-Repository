@@ -23,6 +23,7 @@ app_name = 'article'
 urlpatterns = [
     path('create/',views.article_create,name='create'),
     path('',views.article_list,name='list'),
+    path('export-pdf', views.html_to_pdf_view , name="export-pdf"),
     url('(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
    
 ]

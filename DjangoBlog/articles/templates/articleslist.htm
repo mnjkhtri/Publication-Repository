@@ -1,5 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+    <a href="{% url 'article:export-pdf'%}">Export as Pdf</a>
 
     <div class='articles'>
         {%for article in articles%}
