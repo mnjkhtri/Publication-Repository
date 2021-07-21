@@ -74,7 +74,7 @@ def biptexParser(f):
 
 def article_list(request):
     articles = Article.objects.all().order_by('date')
-    return render(request, 'articleslist.htm', {'articles': articles})
+    return render(request, 'articleslist.html', {'articles': articles})
 
 
 @login_required(login_url='accounts:login')
@@ -110,4 +110,4 @@ def article_detail(request, slug):
     # return HttpResponse(slug)
    # form = forms.CreateArticle()
     article = Article.objects.get(slug=slug)
-    return render(request, 'article_obj.htm', {'article': article})
+    return render(request, 'article_obj.html', {'article': article})
