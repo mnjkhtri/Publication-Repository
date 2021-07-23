@@ -28,6 +28,9 @@ class Article(models.Model): #this is like a table with fields
             self.slug = slugify(self.title)
         super(Article, self).save(*args, **kwargs)
 
+    def getAuthors(self):
+        return self.author.first_name+' '+self.author.last_name+','+self.co_authors
+
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
         return self.title
     

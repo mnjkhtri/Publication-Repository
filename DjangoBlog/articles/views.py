@@ -69,7 +69,7 @@ def article_create(request):
             if biptexForm.is_valid():
                 file_handler = request.FILES['bibtex']
                 result =biptexParser(file_handler)
-                print(result["title"])
+                print(result)
                 #we need to provide initials for form in data below
                 
                 data = { 'title': result['title'],}

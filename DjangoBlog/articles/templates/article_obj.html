@@ -2,8 +2,14 @@
 {% block content %}
 <a href="{% url 'article:export-pdf'%}">Export as Pdf</a>
 <div class='article'>
-    <h2>{{article.title}}</h2>
-    <p>{{article.description}}</p>
-    <p>{{article.date}}</p>
+    <h2>TITLE:{{article.title}}</h2>
+    <p>Authors:{{article.getAuthors}}</p>
+    <p>Journal:{{article.journal}}</p>
+    <p>Description:{{article.description}}</p>
+    <p>Pub Date:{{article.date}}</p>
+    <p>Volume: {{article.volume}}</p>
+    <p>Pages:{{article.pages}}</p>
+    <p>Citations:{{article.citations}}</p>
+    <a href="{{article.article_link}}">Link to article</a>
 </div>
 {% endblock %}

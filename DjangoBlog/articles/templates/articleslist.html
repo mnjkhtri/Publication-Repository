@@ -7,8 +7,8 @@
         <div class ='article'>
             
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
-           
-            <p>{{ article.pub_date }}</p>
+            <p>{{article.getAuthors}}</p>
+            <p>{{article.journal}} {{article.pages}}</p>
 
         </div>
         {%endfor%}
