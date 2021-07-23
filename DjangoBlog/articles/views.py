@@ -53,7 +53,7 @@ def biptexParser(f):
 
 
 def article_list(request):
-    articles = Article.objects.all().order_by('date')
+    articles = Article.objects.all().order_by('pub_date')
     return render(request, 'articleslist.html', {'articles': articles})
 
 

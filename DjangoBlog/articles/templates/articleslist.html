@@ -1,18 +1,18 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-    <a href="{% url 'article:export-pdf'%}">Export as Pdf</a>
+   
 
     <div class='articles'>
         {%for article in articles%}
         <div class ='article'>
             
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
-            <p>{{article.snippet}}</p>
-            <p>{{ article.date }}</p>
+           
+            <p>{{ article.pub_date }}</p>
 
         </div>
         {%endfor%}
 
     </div>
-    "This is articles List"
+   
 {% endblock %}
