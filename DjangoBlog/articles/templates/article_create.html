@@ -4,7 +4,7 @@
 <h2>Create Your Content</h2>
 <form action='./' method="POST" class="form-site" enctype="multipart/form-data">
     {%csrf_token%}
-    {{form}}
+    {{form.as_p}}
     <input type="submit" value="Create">
 </form>
 <br>

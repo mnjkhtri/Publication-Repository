@@ -33,26 +33,6 @@ def html_to_pdf_view(request):
         textobject.setFont("Helvetica", 14)
         textobject.textLine(article.body)
     p.drawText(textobject)
-    # x = 0.5*inch
-    # y = 2.7*inch
-    # for article in articles:
-    #     p.setFont("Helvetica-Bold", 30)
-    #     p.drawString(x,y,article.title)
-    #     y = y-33
-    #     p.setFont("Helvetica", 20)
-    #     p.drawString(x,y,article.body)
-    #     y = y-22
-    # Start writing the PDF here
-    # for article in articles:
-    #     p.setFont("Helvetica-Bold",30,leading=10)
-    #     p.drawString(0, y,article.title+'\n')
-    #     y=y-20
-    #     p.setFont("Helvetica",20,leading=10)
-    #     p.drawString(0,y,article.body+'\n')
-    #     y=y-40
-        
-    # End writing
-
     p.showPage()
     p.save()
     buffer.seek(0)
