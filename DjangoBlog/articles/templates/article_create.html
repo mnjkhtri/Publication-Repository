@@ -1,8 +1,9 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 <div class='create'></div>
-<h2>Create Your Content</h2>
-<form action='./' method="POST" class="form-site" enctype="multipart/form-data">
+<h2>Create {{type}}</h2>
+
+<form action="{% url 'article:create' type  %}"  method="POST" class="form-site" enctype="multipart/form-data">
     {%csrf_token%}
     {% for field in form %}
     <p>
@@ -20,7 +21,7 @@
 </form>
 <br>
 <hr>
-<form action='./' method="POST" class="form-site" enctype="multipart/form-data">
+<form action="{% url 'article:create' type %}" method="POST" class="form-site" enctype="multipart/form-data">
     {%csrf_token%}
     {{biptex}}
     <input type="submit" name="bibtexUpload" value="Populate">

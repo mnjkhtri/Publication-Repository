@@ -18,7 +18,9 @@
             <ul>
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'article:list'%}">Home</a></li> 
-             <li><a href="{% url 'article:create'%}">Create Articles</a></li> 
+             <li><a href="{% url 'article:create' type='journal'%}">Create Journal</a></li>
+             <li><a href="{% url 'article:create' type='conference'%}">Create Conference</a></li>
+             <li><a href="{% url 'article:create' type='Book'%}">Book </a></li> 
              
               <li>
                   <form action="{% url 'accounts:logout' %}" method="POST">

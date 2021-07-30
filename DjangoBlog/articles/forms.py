@@ -17,6 +17,26 @@ class CreateArticle(forms.ModelForm):
             "pub_date": DateInput()
         }
 
+class CreateBook(forms.ModelForm):
+    class Meta:
+        model = models.Book
+        fields ='__all__'
+        exclude =['slug','author']
+        widgets={
+            "pub_date": DateInput()
+        }
+
+class CreateConference(forms.ModelForm):
+    class Meta:
+        model = models.ConferenceArticle
+        fields ='__all__'
+        exclude =['slug','author']
+        widgets={
+            "pub_date": DateInput(),
+            "organised_date":DateInput()
+        }
+
+
 
 class BiptexForm(forms.Form):
     bibtex = forms.FileField()
