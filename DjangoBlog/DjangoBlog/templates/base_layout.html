@@ -10,36 +10,70 @@
     <title>Document</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
     <link rel="stylesheet" href="{%static 'styles.css' %}">
+    <script src="https://kit.fontawesome.com/ce5570254b.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class="wrapper row">
-        <div class="sidebar col-lg-2 col-md-3">
-        <nav class="nav flex-column">
-            <ul>
+
+    <nav class="navbar background h-nav">
+        <ul class="nav-list1 v-class">
+            <div class="logo"><img src="{% static 'img/logo.png'%}" alt="logo"></div>
+            <div class="text-big ">Personal Publication Repository </div>
+
+        </ul>
+        <div class="rightNav">
+              
                 {% if user.is_authenticated %}
-                <li><a href="{% url 'article:list'%}">Home</a></li> 
-             <li><a href="{% url 'article:create' type='journal'%}">Create Journal</a></li>
-             <li><a href="{% url 'article:create' type='conference'%}">Create Conference</a></li>
-             <li><a href="{% url 'article:create' type='Book'%}">Book </a></li> 
-             
-              <li>
-                  <form action="{% url 'accounts:logout' %}" method="POST">
-                      {%csrf_token%}
-                      <button type="submit">Log Out</buttton>
-                  </form>
-              </li> 
+                <form action="{% url 'accounts:logout' %}" method="POST">
+                    {%csrf_token%}
+                    <button type="submit"class="btn btn-dark">Log Out</buttton>
+                </form>
+
+                
+
               {% else %}
-              <li><a href="{% url 'accounts:login' %}">LogIn</a></li>
-              <li><a href="{% url 'accounts:signup' %}">SignUp</a></li>
+              <li><a href="{% url 'accounts:login' %}" class="btn btn-dark">LogIn</a></li>
+              <li><a href="{% url 'accounts:signup' %}" class="btn btn-dark">SignUp</a></li>
+               
               {% endif %}
-            </ul>
-        </nav>
+
         </div>
-        <div class="main col-lg-10 col-md-9">
+       
+
+    </nav>
+    <section class="firstSection">
+    <div class="box-main background2">
+
+        <div class="firsthalf background">
+                
+            <ul class="nav_list">
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'article:list'%}"><i class="fas fa-home"></i>Home</a></li>
+                <li><a href="#Profile"><i class="fas fa-id-badge"></i> Profile</a></li>
+                <li><i class="fas fa-plus-circle"></i>Add New Post <i class="fas fa-caret-down"></i></li>
+                <ul class="create-list">
+                    <li><a href="{% url 'article:create' type='journal'%}"><i class="far fa-newspaper"></i>Journal article</a> </li>
+                    <li><a href="{% url 'article:create' type='conference'%}"><i class="fas fa-newspaper"></i>Conference article</a> </li>
+                    <li><a href="{% url 'article:create' type='Book'%}"><i class="fas fa-book"></i>Book</a> </li>
+                  
+                </ul>
+                <li><a href="#Search"><i class="fas fa-search"></i>Search</a></li>
+                {% endif %}
+               
+
+            </ul>
+
+
+        </div>
+
+        
+
+        
+        <div class="secondhalf">
             {% block content %}
             {% endblock %}
         </div>
     </div>
+</section>
 
 </body>
 </html>
