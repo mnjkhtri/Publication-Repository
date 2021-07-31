@@ -9,12 +9,12 @@ from django.utils.text import slugify
 class Article(models.Model): #this is like a table with fields
     title = models.CharField(max_length=100)
     slug=models.SlugField()
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
     pub_date=models.DateField(blank=True,default=None)
     journal =models.CharField(max_length=100,blank=True)
     volume=models.IntegerField(default=0)
     issue =models.IntegerField(default=0)
-    pages =models.CharField(max_length=50,help_text="must be in form 333-444",blank=True)
+    pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
 
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
@@ -31,6 +31,9 @@ class Article(models.Model): #this is like a table with fields
     def getAuthors(self):
         return self.author.first_name+' '+self.author.last_name+','+self.co_authors
 
+    def get_pub_year(self):
+        return self.pub_date.year
+
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
         return self.title
     
@@ -41,7 +44,7 @@ class Article(models.Model): #this is like a table with fields
 class Book(models.Model):
     title = models.CharField(max_length=100)
     slug=models.SlugField()
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
     pub_date=models.DateField(blank=True,default=None)
     description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
@@ -72,7 +75,7 @@ class ConferenceArticle(models.Model):
     pub_date=models.DateField(blank=True,default=None)
     description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
 
     conference_name = models.CharField(max_length=200, null=True, blank=True)
     location = models.CharField(max_length=50, null=True, blank=True)

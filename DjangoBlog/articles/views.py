@@ -12,39 +12,36 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from io import BytesIO
 
-from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.pdfgen import canvas
+
+from django.template.loader import get_template
+
+from xhtml2pdf import pisa
 
 
-def html_to_pdf_view(request):
-    articles = Article.objects.all().order_by('-pub_date')
+#pdf export here-------------------------
+def create_pdf(request):
+    articles=Article.objects.all()
+
+    template_path = 'pdf_template.html'
+
+    context = {'articles': articles}
+
     response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'inline; filename="mypdf.pdf"'
 
-    buffer = BytesIO()
-    p = canvas.Canvas(buffer)
-    textobject = p.beginText()
-    textobject.setTextOrigin(inch, 2.5*inch)
+    response['Content-Disposition'] = 'filename="result.pdf"'
 
-    for article in articles:
-        textobject.setFont("Helvetica-Bold", 25)
-        textobject.textLine(article.title)
-        textobject.setFont("Helvetica", 14)
-        textobject.textLine(article.description)
-    p.drawText(textobject)
-    p.showPage()
-    p.save()
-    buffer.seek(0)
+    template = get_template(template_path)
 
-    # pdf = buffer.getvalue()
-    # buffer.close()
-    # response.write(pdf)
+    html = template.render(context)
 
-    return FileResponse(buffer, as_attachment=False, filename="mypage.pdf")
-# -------------pdf export ends here-----------------------------------------------
-
+    # create a pdf
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    # if error then show some funy view
+    if pisa_status.err:
+       return HttpResponse('We had some errors <pre>' + html + '</pre>')
+    return response
+#export ends-------------------------
 
 def biptexParser(f):
     bib_database = bibtexparser.load(f)
@@ -90,7 +87,19 @@ def article_create(request, type):
                 file_handler = request.FILES['bibtex']
                 result = biptexParser(file_handler)
                 print(result)
-                data = {'title': result['title'], }
+                #common fields to all publishings
+                data = {'title': result.get("title",""),
+                    "co_authors":result.get("author",""),
+                    "pages":result.get("pages","") }
+                #coauthor also contains author name , need to work on this
+                #non common fields parsed here
+                
+                data['journal']=result.get("journal","")
+                data['publisher']=result.get("publisher","")
+                data['volume']=result.get("volume","")
+                data['pages']=result.get("pages","")
+                    
+
 
                 if type == 'journal':
                     print("yes it is journal")

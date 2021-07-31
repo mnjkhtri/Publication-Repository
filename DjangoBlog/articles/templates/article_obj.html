@@ -1,6 +1,6 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-<a href="{% url 'article:export-pdf'%}">Export as Pdf</a>
+
 <div class='article'>
     <h2>TITLE:{{article.title}}</h2>
     <p>Authors:{{article.getAuthors}}</p>
