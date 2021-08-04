@@ -47,6 +47,13 @@
 
               {% endfor %}
 
+              {% for book in books %}
+              <p>{{book.author.last_name}}, {{book.author.first_name}},et.al "{{book.title}}.",vol.{{book.volume}},{{book.get_pub_year}},pp.{{book.pages}}</p>
+              <hr>
+              <br>
+
+              {% endfor %}
+
             </div>
         </div>
     </div>

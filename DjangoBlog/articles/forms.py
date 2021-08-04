@@ -39,4 +39,4 @@ class CreateConference(forms.ModelForm):
 
 
 class BiptexForm(forms.Form):
-    bibtex = forms.FileField()
+    bibtex_form = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}))

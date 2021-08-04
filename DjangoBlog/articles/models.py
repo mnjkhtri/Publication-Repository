@@ -17,7 +17,7 @@ class Article(models.Model): #this is like a table with fields
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
 
-    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="journals")
     citations =models.IntegerField(default=0)
     publisher =models.CharField(default=None,max_length=100)
     article_link =models.URLField(default=None)
@@ -47,7 +47,7 @@ class Book(models.Model):
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
     pub_date=models.DateField(blank=True,default=None)
     description =models.TextField(default="No description")
-    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="books")
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
 
 
@@ -74,7 +74,7 @@ class ConferenceArticle(models.Model):
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
     pub_date=models.DateField(blank=True,default=None)
     description =models.TextField(default="No description")
-    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING)
+    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="conferenceArticle")
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
 
     conference_name = models.CharField(max_length=200, null=True, blank=True)

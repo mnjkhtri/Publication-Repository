@@ -1,7 +1,9 @@
 
-from django.http.response import FileResponse, HttpResponse
+from enum import auto
+from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 from django.shortcuts import redirect, render
-from .models import Article
+from .models import Article,Book,ConferenceArticle
 from django.contrib.auth.decorators import login_required
 from .import forms
 
@@ -20,11 +22,14 @@ from xhtml2pdf import pisa
 
 #pdf export here-------------------------
 def create_pdf(request):
-    articles=Article.objects.all()
+    articles=Article.objects.filter(author=request.user)
+    books =Article.objects.filter(author=request.user)
+    conferences =Article.objects.filter(author=request.user)
 
     template_path = 'pdf_template.html'
 
-    context = {'articles': articles}
+    context = {'articles': articles, 'books':books,
+    'conferences':conferences}
 
     response = HttpResponse(content_type='application/pdf')
 
@@ -49,8 +54,14 @@ def biptexParser(f):
 
 
 def article_list(request):
-    articles = Article.objects.all().order_by('pub_date')
-    return render(request, 'articleslist.html', {'articles': articles})
+    if request.user.is_authenticated:
+        articles = Article.objects.filter(author=request.user).order_by('pub_date')
+        books = Book.objects.filter(author =request.user)
+        conference_articles=ConferenceArticle.objects.filter(author=request.user)
+    else:
+        return HttpResponseRedirect(reverse("accounts:signup"))
+    return render(request, 'articleslist.html', {'articles': articles,
+    'books':books,'conference_article':conference_articles})
 
 
 @login_required(login_url='accounts:login')
@@ -80,35 +91,43 @@ def article_create(request, type):
     if request.method == 'POST':
         print("Post request")
         if "bibtexUpload" in request.POST:
+            biptexForm = forms.BiptexForm(request.POST, request.FILES)
+            files = request.FILES.getlist('bibtex_form') 
+            #id of input_file box  is bibtex_form
+            print(files)
 
             print("got biptex")
-            biptexForm = forms.BiptexForm(request.POST, request.FILES)
             if biptexForm.is_valid():
-                file_handler = request.FILES['bibtex']
-                result = biptexParser(file_handler)
-                print(result)
-                #common fields to all publishings
-                data = {'title': result.get("title",""),
-                    "co_authors":result.get("author",""),
-                    "pages":result.get("pages","") }
-                #coauthor also contains author name , need to work on this
-                #non common fields parsed here
+                for file in files:
+                    print(file)
+                    result = biptexParser(file)
+                    print(result)
+
                 
-                data['journal']=result.get("journal","")
-                data['publisher']=result.get("publisher","")
-                data['volume']=result.get("volume","")
-                data['pages']=result.get("pages","")
+                
+                
+                # #common fields to all publishings
+                # data = {'title': result.get("title",""),
+                #     "co_authors":result.get("author",""),
+                #     "pages":result.get("pages","") }
+                # #coauthor also contains author name , need to work on this
+                # #non common fields parsed here
+                
+                # data['journal']=result.get("journal","")
+                # data['publisher']=result.get("publisher","")
+                # data['volume']=result.get("volume","")
+                # data['pages']=result.get("pages","")
                     
 
 
-                if type == 'journal':
-                    print("yes it is journal")
-                    form = forms.CreateArticle(initial=data)
+                # if type == 'journal':
+                #     print("yes it is journal")
+                #     form = forms.CreateArticle(initial=data)
 
-                elif type == 'conference':
-                    form = forms.CreateConference(initial=data)
-                elif type == 'Book':
-                    form = forms.CreateBook(initial=data)
+                # elif type == 'conference':
+                #     form = forms.CreateConference(initial=data)
+                # elif type == 'Book':
+                #     form = forms.CreateBook(initial=data)
         else:
             if type == 'journal':
                 print("yes it is journal")
@@ -133,5 +152,14 @@ def article_create(request, type):
 def article_detail(request, slug):
     # return HttpResponse(slug)
    # form = forms.CreateArticle()
-    article = Article.objects.get(slug=slug)
+    
+    if Article.objects.filter(slug=slug).exists():
+        article =Article.objects.get(slug=slug)
+    elif Book.objects.filter(slug=slug).exists():
+        article=Book.objects.get(slug=slug)
+
+    elif ConferenceArticle.objects.filter(slug=slug).exists():
+        article=ConferenceArticle.objects.get(slug=slug)
+
+    
     return render(request, 'article_obj.html', {'article': article})

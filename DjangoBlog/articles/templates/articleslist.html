@@ -1,6 +1,8 @@
 {% extends 'base_layout.html' %}
 {% block content %}
+{% if user.is_authenticated %}
 <a href="{% url 'article:export-pdf'%}">Export as Pdf</a>
+{% endif %}
 <br>
 <br> 
 
@@ -9,6 +11,25 @@
         <div class ='article'>
             
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
+            <p>{{article.getAuthors}}</p>
+            <p>{{article.journal}} {{article.pages}}</p>
+
+        </div>
+        {%endfor%}
+        {%for book in books%}
+        <div class ='article'>
+            
+            <h2><a href="{% url 'article:detail' slug=book.slug %}">{{book.title}}</a></h2>
+            <p>{{book.getAuthors}}</p>
+            <p>{{book.journal}} {{book.pages}}</p>
+
+        </div>
+        {%endfor%}
+
+        {%for article in conference_article %}
+        <div class ='article'>
+            
+            <h2><a href="{% url 'article:detail' slug=book.slug %}">{{article.title}}</a></h2>
             <p>{{article.getAuthors}}</p>
             <p>{{article.journal}} {{article.pages}}</p>
 

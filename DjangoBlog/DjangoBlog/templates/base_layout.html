@@ -42,7 +42,7 @@
     </nav>
     <section class="firstSection">
     <div class="box-main background2">
-
+        {% if user.is_authenticated %}
         <div class="firsthalf background">
                 
             <ul class="nav_list">
@@ -61,7 +61,7 @@
                
 
             </ul>
-
+        {% endif %}
 
         </div>
 
