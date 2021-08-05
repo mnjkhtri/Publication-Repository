@@ -1,0 +1,15 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+
+<div class='article'>
+    <h2>TITLE:{{article.title}}</h2>
+    <p>Authors:{{article.getAuthors}}</p>
+    <p>Journal:{{article.journal}}</p>
+    <p>Description:{{article.description}}</p>
+    <p>Pub Date:{{article.date}}</p>
+    <p>Volume: {{article.volume}}</p>
+    <p>Pages:{{article.pages}}</p>
+    <p>Citations:{{article.citations}}</p>
+    <a href="{{article.article_link}}">Link to article</a>
+</div>
+{% endblock %}

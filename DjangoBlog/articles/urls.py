@@ -21,8 +21,10 @@ from .import views
 
 app_name = 'article'
 urlpatterns = [
-    path('create/',views.article_create,name='create'),
+    path('create/<str:type>',views.article_create,name='create'),
     path('',views.article_list,name='list'),
-    url('(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
+    path('export-pdf/<str:export_Format>', views.create_pdf , name="export-pdf"),
+    path('bibtexUpload',views.bibtexPopulator, name='bibtex-upload'),
+    url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
    
 ]
