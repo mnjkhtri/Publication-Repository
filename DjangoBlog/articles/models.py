@@ -31,6 +31,24 @@ class Article(models.Model): #this is like a table with fields
     def getAuthors(self):
         return self.author.first_name+' '+self.author.last_name+','+self.co_authors
 
+    def getApaAuthors(self):
+        new_list = self.co_authors.split(' and')
+        print(new_list)
+        result = ''
+        #need to generate user list in apa format
+        for item in new_list:
+            if item ==new_list[-1]:
+                #check if it is last element to append &
+                print('yes')
+                result +='& '
+            temp=item.split()
+            if len(temp)==3:
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+            else:
+                result+= temp[0]+temp[1][0]+'.,'
+        
+        return result
+
     def get_pub_year(self):
         return self.pub_date.year
 
@@ -67,6 +85,27 @@ class Book(models.Model):
     def getAuthors(self):
         return self.author.first_name+' '+self.author.last_name+','+self.co_authors
 
+    def getApaAuthors(self):
+        new_list = self.co_authors.split(' and')
+        print(new_list)
+        result = ''
+        #need to generate user list in apa format
+        for item in new_list:
+            if item ==new_list[-1]:
+                #check if it is last element to append &
+                print('yes')
+                result +='& '
+            temp=item.split()
+            if len(temp)==3:
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+            else:
+                result+= temp[0]+temp[1][0]+'.,'
+        
+        return result
+    
+    
+        
+
 
 class ConferenceArticle(models.Model):
     title = models.CharField(max_length=100)
@@ -94,6 +133,24 @@ class ConferenceArticle(models.Model):
 
     def getAuthors(self):
         return self.author.first_name+' '+self.author.last_name+','+self.co_authors
+
+    def getApaAuthors(self):
+        new_list = self.co_authors.split(' and')
+        print(new_list)
+        result = ''
+        #need to generate user list in apa format
+        for item in new_list:
+            if item ==new_list[-1]:
+                #check if it is last element to append &
+                print('yes')
+                result +='& '
+            temp=item.split()
+            if len(temp)==3:
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+            else:
+                result+= temp[0]+temp[1][0]+'.,'
+        
+        return result
 
     
 

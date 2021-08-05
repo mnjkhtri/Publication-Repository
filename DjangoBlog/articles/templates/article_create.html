@@ -21,9 +21,5 @@
 </form>
 <br>
 <hr>
-<form action="{% url 'article:create' type %}" method="POST" class="form-site" enctype="multipart/form-data">
-    {%csrf_token%}
-    {{biptex}}
-    <input type="submit" name="bibtexUpload" value="Populate">
-</form>
+
 {% endblock %}

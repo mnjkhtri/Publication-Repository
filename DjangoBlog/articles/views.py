@@ -21,15 +21,16 @@ from xhtml2pdf import pisa
 
 
 #pdf export here-------------------------
-def create_pdf(request):
+def create_pdf(request,export_Format):
     articles=Article.objects.filter(author=request.user)
     books =Article.objects.filter(author=request.user)
     conferences =Article.objects.filter(author=request.user)
 
     template_path = 'pdf_template.html'
 
+
     context = {'articles': articles, 'books':books,
-    'conferences':conferences}
+    'conferences':conferences,'format':export_Format}
 
     response = HttpResponse(content_type='application/pdf')
 
@@ -48,9 +49,7 @@ def create_pdf(request):
     return response
 #export ends-------------------------
 
-def biptexParser(f):
-    bib_database = bibtexparser.load(f)
-    return bib_database.entries[0]  # returns dict
+
 
 
 def article_list(request):
@@ -90,59 +89,20 @@ def article_create(request, type):
 
     if request.method == 'POST':
         print("Post request")
-        if "bibtexUpload" in request.POST:
-            biptexForm = forms.BiptexForm(request.POST, request.FILES)
-            files = request.FILES.getlist('bibtex_form') 
-            #id of input_file box  is bibtex_form
-            print(files)
+        if type == 'journal':
+            print("yes it is journal")
+            form = forms.CreateArticle(request.POST)
 
-            print("got biptex")
-            if biptexForm.is_valid():
-                for file in files:
-                    print(file)
-                    result = biptexParser(file)
-                    print(result)
-
-                
-                
-                
-                # #common fields to all publishings
-                # data = {'title': result.get("title",""),
-                #     "co_authors":result.get("author",""),
-                #     "pages":result.get("pages","") }
-                # #coauthor also contains author name , need to work on this
-                # #non common fields parsed here
-                
-                # data['journal']=result.get("journal","")
-                # data['publisher']=result.get("publisher","")
-                # data['volume']=result.get("volume","")
-                # data['pages']=result.get("pages","")
-                    
-
-
-                # if type == 'journal':
-                #     print("yes it is journal")
-                #     form = forms.CreateArticle(initial=data)
-
-                # elif type == 'conference':
-                #     form = forms.CreateConference(initial=data)
-                # elif type == 'Book':
-                #     form = forms.CreateBook(initial=data)
-        else:
-            if type == 'journal':
-                print("yes it is journal")
-                form = forms.CreateArticle(request.POST)
-
-            elif type == 'conference':
-                form = forms.CreateConference(request.POST)
-            elif type == 'Book':
-                form = forms.CreateBook(request.POST)
-            # form = forms.CreateArticle(request.POST, request.FILES)
-            if form.is_valid():
-                instance = form.save(commit=False)
-                instance.author = request.user
-                instance.save()
-                return redirect('article:list')
+        elif type == 'conference':
+            form = forms.CreateConference(request.POST)
+        elif type == 'Book':
+            form = forms.CreateBook(request.POST)
+        # form = forms.CreateArticle(request.POST, request.FILES)
+        if form.is_valid():
+            instance = form.save(commit=False)
+            instance.author = request.user
+            instance.save()
+            return redirect('article:list')
 
     return render(request, 'article_create.html', {'form': form,
                                                    "biptex": biptexForm,
@@ -163,3 +123,59 @@ def article_detail(request, slug):
 
     
     return render(request, 'article_obj.html', {'article': article})
+
+
+def readbibtex(f):
+    bib_database = bibtexparser.load(f)
+    print('bib database entries-------------')
+    print(bib_database)
+    print('------------------------------------')
+    return bib_database.entries[0]  # returns dict
+
+
+def bibtexPopulator(request):
+    '''receives multiple bibtex files as input and parse them and 
+       create a model for each bibtex to store in database   '''
+    biptexForm = forms.BiptexForm()
+    if request.method == 'POST':
+           
+            
+        biptexForm = forms.BiptexForm(request.POST, request.FILES)
+        files = request.FILES.getlist('bibtex_form') 
+        #id of input_file box  is bibtex_form
+        print(files)
+
+        print("got biptex")
+        if biptexForm.is_valid():
+            for file in files:
+                print(file)
+                result = readbibtex(file)
+                print(result)
+
+            
+            
+            
+            # #common fields to all publishings
+            # data = {'title': result.get("title",""),
+            #     "co_authors":result.get("author",""),
+            #     "pages":result.get("pages","") }
+            # #coauthor also contains author name , need to work on this
+            # #non common fields parsed here
+            
+            # data['journal']=result.get("journal","")
+            # data['publisher']=result.get("publisher","")
+            # data['volume']=result.get("volume","")
+            # data['pages']=result.get("pages","")
+                        
+
+
+                    # if type == 'journal':
+                    #     print("yes it is journal")
+                    #     form = forms.CreateArticle(initial=data)
+
+                    # elif type == 'conference':
+                    #     form = forms.CreateConference(initial=data)
+                    # elif type == 'Book':
+                    #     form = forms.CreateBook(initial=data)
+
+    return render(request,"bibtexForm.html",{'biptex':biptexForm})
