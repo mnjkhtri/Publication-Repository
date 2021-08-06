@@ -16,6 +16,7 @@ from io import BytesIO
 
 
 from django.template.loader import get_template
+from django.urls import reverse
 
 from xhtml2pdf import pisa
 
@@ -130,7 +131,7 @@ def readbibtex(f):
     print('bib database entries-------------')
     print(bib_database)
     print('------------------------------------')
-    return bib_database.entries[0]  # returns dict
+    return bib_database.entries  # returns dict
 
 
 def bibtexPopulator(request):
@@ -150,8 +151,10 @@ def bibtexPopulator(request):
             for file in files:
                 print(file)
                 result = readbibtex(file)
-                print(result)
-
+                for item in result:
+                    print(item)
+                    print('--------------------')
+        return HttpResponseRedirect(reverse('article:list'))
             
             
             

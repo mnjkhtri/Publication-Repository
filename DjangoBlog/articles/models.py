@@ -121,7 +121,7 @@ class ConferenceArticle(models.Model):
     organised_date = models.DateField(
         null=True, blank=True)
 
-    conference_link =models.URLField(default=None)
+    conference_link =models.URLField(blank=True,null=True ,default="http://nolink.com")
 
     def save(self, *args, **kwargs):
         if not self.slug:
