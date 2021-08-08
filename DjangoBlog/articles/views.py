@@ -229,14 +229,34 @@ def bibtexPopulator(request):
                         # print(item)
                         if item.get("ENTRYTYPE")=='article':
                             print("article obtained")
+                            pubDate=datetime.date(int(item.get('year','1111')),1,1)
+                            new_journal =Article.objects.create(
+                                title =item.get('title'),
+                                co_authors=item.get('author'),
+                                pub_date=pubDate,
+                                author =request.user,
+                                journal =item.get('journal',''),
+                                volume =item.get('volume',0),
+                                pages =item.get('pages',''),
+                                publisher =item.get('publisher', '')
+                            )
+                            new_journal.save()
+                            print('journal saved successfully---')
+
+                            
                         elif item.get("ENTRYTYPE")=='inproceedings':
                             print("proceedings obtained")
-                            pubDate=datetime.date(int(item.get('year','0000')),1,1)
+                            pubDate=datetime.date(int(item.get('year','1111')),1,1)
                             new_obj =ConferenceArticle.objects.create(
                                 title =item.get('title'),
                                 co_authors=item.get('author'),
                                 pub_date=pubDate,
-                                author =request.user
+                                author =request.user,
+                                conference_name =item.get('booktitle',''),
+                                volume =item.get('volume',0),
+                                pages =item.get('pages',''),
+                                publisher =item.get('organization', '')
+
                             )
                             # new_obj.save(commit=False)
                             # new_obj.author =request.user

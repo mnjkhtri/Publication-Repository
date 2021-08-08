@@ -19,7 +19,7 @@ class Article(models.Model): #this is like a table with fields
     description =models.TextField(default="No description")
 
     publisher =models.CharField(default=None,max_length=100)
-    article_link =models.URLField(default=None,blank=True)
+    article_link =models.URLField(blank=True)
 
     #auto add slug before save
     def save(self, *args, **kwargs):
@@ -71,7 +71,7 @@ class Book(models.Model):
     edition = models.CharField(max_length=50, null=True, blank=True)
     isbn = models.CharField(max_length=50, null=True, blank=True)
     chapters = models.CharField(max_length=50, null=True, blank=True)
-    book_link =models.URLField(default=None,blank=True)
+    book_link =models.URLField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -115,9 +115,10 @@ class ConferenceArticle(models.Model):
     volume=models.IntegerField(default=0)
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
+    publisher =models.CharField(default=None,max_length=100)
     
     conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
-    conference_link =models.URLField(blank=True,default=None)
+    conference_link =models.URLField(blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:

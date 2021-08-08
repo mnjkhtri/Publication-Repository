@@ -39,7 +39,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
               {% ifequal format 'MLA'%}
-              <h1>working till here</h1>
+              <h1>MLA Format</h1>
               
                 <hr>
                 {% for article in articles %}
@@ -56,7 +56,6 @@
 
                 {% endfor %}
                 {% for conference in conferences %}
-                <h1>from conference</h1>
                 <p>{{conference.author.last_name}}, {{conference.author.first_name}},et.al "{{conference.title}}.",vol.{{conference.volume}},{{conference.get_pub_year}},pp.{{conference.pages}}</p>
                 <hr>
                 <br>
