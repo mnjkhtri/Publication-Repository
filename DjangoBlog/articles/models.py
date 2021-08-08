@@ -36,15 +36,18 @@ class Article(models.Model): #this is like a table with fields
         result = ''
         #need to generate user list in apa format
         for item in new_list:
-            if item ==new_list[-1]:
+            if item ==new_list[-1] and len(new_list)!=1:
                 #check if it is last element to append &
                 print('yes')
                 result +='& '
             temp=item.split()
             if len(temp)==3:
-                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'., '
+            elif len(temp)==2:
+                result+= temp[0]+temp[1][0]+'., '
+                
             else:
-                result+= temp[0]+temp[1][0]+'.,'
+                continue
         
         return result
 
@@ -90,15 +93,18 @@ class Book(models.Model):
         result = ''
         #need to generate user list in apa format
         for item in new_list:
-            if item ==new_list[-1]:
+            if item ==new_list[-1] and len(new_list)!=1:
                 #check if it is last element to append &
                 print('yes')
                 result +='& '
             temp=item.split()
             if len(temp)==3:
-                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'., '
+            elif len(temp)==2:
+                result+= temp[0]+temp[1][0]+'., '
+                
             else:
-                result+= temp[0]+temp[1][0]+'.,'
+                continue
         
         return result
     
@@ -137,15 +143,20 @@ class ConferenceArticle(models.Model):
         result = ''
         #need to generate user list in apa format
         for item in new_list:
-            if item ==new_list[-1]:
+            if item ==new_list[-1] and len(new_list)!=1:
                 #check if it is last element to append &
                 print('yes')
                 result +='& '
             temp=item.split()
+            print(temp)
             if len(temp)==3:
                 result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
-            else:
+            elif len(temp)==2:
                 result+= temp[0]+temp[1][0]+'.,'
+                
+            else:
+                continue
+                
         
         return result
 

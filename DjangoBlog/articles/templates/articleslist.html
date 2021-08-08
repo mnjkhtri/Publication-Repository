@@ -26,7 +26,7 @@
         <div class ='article'>
             
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
-            <p>{{article.getAuthors}}</p>
+            <p >{{article.getAuthors}}</p>
             <p>{{article.journal}} {{article.pages}}</p>
 
         </div>
@@ -36,7 +36,7 @@
             
             <h2><a href="{% url 'article:detail' slug=book.slug %}">{{book.title}}</a></h2>
             <p>{{book.getAuthors}}</p>
-            <p>{{book.journal}} {{book.pages}}</p>
+            <p> {{book.pages}}</p>
 
         </div>
         {%endfor%}
@@ -45,8 +45,8 @@
         <div class ='article'>
             
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
-            <p>{{article.getAuthors}}</p>
-            <p>{{article.journal}} {{article.pages}}</p>
+            <p style="overflow: hidden;">{{article.getAuthors}}</p>
+            <p>{{article.conference_name}}, {{article.pages}}</p>
 
         </div>
         {%endfor%}

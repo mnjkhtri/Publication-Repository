@@ -4,12 +4,16 @@
 <div class='article'>
     <h2>TITLE:{{article.title}}</h2>
     <p>Authors:{{article.getAuthors}}</p>
+    {% if article.journal %}
     <p>Journal:{{article.journal}}</p>
+    {% endif %}
     <p>Description:{{article.description}}</p>
     <p>Pub Date:{{article.pub_date.year}}</p>
     <p>Volume: {{article.volume}}</p>
     <p>Pages:{{article.pages}}</p>
+    {% if article.citations %}
     <p>Citations:{{article.citations}}</p>
+    {% endif %}
     <a href="{{article.article_link}}">Link to article</a>
 </div>
 {% endblock %}
