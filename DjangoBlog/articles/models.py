@@ -10,17 +10,16 @@ class Article(models.Model): #this is like a table with fields
     title = models.CharField(max_length=100)
     slug=models.SlugField()
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
-    pub_date=models.DateField(blank=True,default=None)
+    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="journals")
+    pub_date=models.DateField(blank=True,default=None)#some donot have months, need fixation, can be done with integer field
     journal =models.CharField(max_length=100,blank=True)
     volume=models.IntegerField(default=0)
     issue =models.IntegerField(default=0)
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
 
-    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="journals")
-    citations =models.IntegerField(default=0)
     publisher =models.CharField(default=None,max_length=100)
-    article_link =models.URLField(default=None)
+    article_link =models.URLField(default=None,blank=True)
 
     #auto add slug before save
     def save(self, *args, **kwargs):
@@ -72,7 +71,7 @@ class Book(models.Model):
     edition = models.CharField(max_length=50, null=True, blank=True)
     isbn = models.CharField(max_length=50, null=True, blank=True)
     chapters = models.CharField(max_length=50, null=True, blank=True)
-    book_link =models.URLField(default=None)
+    book_link =models.URLField(default=None,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -111,17 +110,14 @@ class ConferenceArticle(models.Model):
     title = models.CharField(max_length=100)
     slug=models.SlugField()
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
-    pub_date=models.DateField(blank=True,default=None)
-    description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="conferenceArticle")
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
-
-    conference_name = models.CharField(max_length=200, null=True, blank=True)
-    location = models.CharField(max_length=50, null=True, blank=True)
-    organised_date = models.DateField(
-        null=True, blank=True)
-
-    conference_link =models.URLField(blank=True,null=True ,default="http://nolink.com")
+    pub_date=models.DateField(blank=True,default=None)
+    volume=models.IntegerField(default=0)
+    pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
+    description =models.TextField(default="No description")
+    
+    conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
+    conference_link =models.URLField(blank=True,default=None)
 
     def save(self, *args, **kwargs):
         if not self.slug:

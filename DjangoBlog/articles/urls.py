@@ -24,6 +24,7 @@ urlpatterns = [
     path('create/<str:type>',views.article_create,name='create'),
     path('',views.article_list,name='list'),
     path('export-pdf/<str:export_Format>', views.create_pdf , name="export-pdf"),
+    path('export-excel', views.create_excelSheet , name="export-excel"),
     path('bibtexUpload',views.bibtexPopulator, name='bibtex-upload'),
     url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
    
