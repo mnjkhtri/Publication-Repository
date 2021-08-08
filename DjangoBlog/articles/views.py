@@ -6,8 +6,12 @@ from django.shortcuts import redirect, render
 from .models import Article,Book,ConferenceArticle
 from django.contrib.auth.decorators import login_required
 from .import forms
+from django.contrib import messages
 
 import bibtexparser
+import datetime
+import csv
+import xlwt #for excel export
 
 # import for pdf export--------------------
 from django.core.files.storage import FileSystemStorage
@@ -16,6 +20,7 @@ from io import BytesIO
 
 
 from django.template.loader import get_template
+from django.urls import reverse
 
 from xhtml2pdf import pisa
 
@@ -23,8 +28,9 @@ from xhtml2pdf import pisa
 #pdf export here-------------------------
 def create_pdf(request,export_Format):
     articles=Article.objects.filter(author=request.user)
-    books =Article.objects.filter(author=request.user)
-    conferences =Article.objects.filter(author=request.user)
+    books =Book.objects.filter(author=request.user)
+    conferences =ConferenceArticle.objects.filter(author=request.user)
+    print(conferences)
 
     template_path = 'pdf_template.html'
 
@@ -49,6 +55,74 @@ def create_pdf(request,export_Format):
     return response
 #export ends-------------------------
 
+#export as excel -------------------------------------
+def create_excelSheet(request):
+    '''fields from models are exported in the form of column in
+    excel format'''
+    response = HttpResponse(content_type='application/ms-excel')
+    response['Content-Disposition'] = 'attachment; filename="result.xls"'
+
+    wb = xlwt.Workbook(encoding='utf-8')
+    ws = wb.add_sheet('result')
+
+    # Sheet header, first row
+    row_num = 0
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+
+    columns = ['Title', 'authors', 'volume ', 'pub_date', ]
+
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+    # font_style.num_format_str = 'dd/mm/yyyy'
+    style2 =xlwt.XFStyle()
+    style2.num_format_str ='dd/mm/yyyy'
+
+    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors', 'volume', 'pub_date')
+    print("the journals are-------------")
+    print(journals)
+
+    
+    for row in journals:
+        row_num += 1
+        for col_num in range(len(row)):
+            if col_num ==3: 
+                #date column
+                ws.write(row_num, col_num, row[col_num], style2)
+            else:
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+
+    font_style = xlwt.XFStyle()
+    font_style.font.bold = True
+    row_num+=3 # gap of three rows
+
+
+    columns = ['Title', 'authors', 'conference_name ', 'pub_date', ]
+    for col_num in range(len(columns)):
+        ws.write(row_num, col_num, columns[col_num], font_style)
+    
+    # Sheet body, remaining rows
+    font_style = xlwt.XFStyle()
+
+    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date')
+    for row in conferences:
+        row_num += 1
+        for col_num in range(len(row)):
+            if col_num ==3: 
+                #date column
+                ws.write(row_num, col_num, row[col_num], style2)
+            else:
+                ws.write(row_num, col_num, row[col_num], font_style)
+
+    wb.save(response)
+    return response
+    # return HttpResponse("this will be excel sheet export")
+
 
 
 
@@ -60,7 +134,8 @@ def article_list(request):
     else:
         return HttpResponseRedirect(reverse("accounts:signup"))
     return render(request, 'articleslist.html', {'articles': articles,
-    'books':books,'conference_article':conference_articles})
+    'books':books,'conference_article':conference_articles
+    })
 
 
 @login_required(login_url='accounts:login')
@@ -71,10 +146,7 @@ def article_create(request, type):
         type= journal: it specifies the journal form is requested
 
     '''
-    # work pending to do--------
-    # migration of newly created models
-    # handling different forms for different models
-    # load different data from biptex
+    
     biptexForm = forms.BiptexForm()
     print("type is :"+type)
     if type == 'journal':
@@ -130,7 +202,7 @@ def readbibtex(f):
     print('bib database entries-------------')
     print(bib_database)
     print('------------------------------------')
-    return bib_database.entries[0]  # returns dict
+    return bib_database.entries  # returns dict
 
 
 def bibtexPopulator(request):
@@ -143,39 +215,56 @@ def bibtexPopulator(request):
         biptexForm = forms.BiptexForm(request.POST, request.FILES)
         files = request.FILES.getlist('bibtex_form') 
         #id of input_file box  is bibtex_form
-        print(files)
+        # print(files)
 
         print("got biptex")
         if biptexForm.is_valid():
             for file in files:
-                print(file)
+                # print(file)
                 result = readbibtex(file)
-                print(result)
-
-            
-            
-            
-            # #common fields to all publishings
-            # data = {'title': result.get("title",""),
-            #     "co_authors":result.get("author",""),
-            #     "pages":result.get("pages","") }
-            # #coauthor also contains author name , need to work on this
-            # #non common fields parsed here
-            
-            # data['journal']=result.get("journal","")
-            # data['publisher']=result.get("publisher","")
-            # data['volume']=result.get("volume","")
-            # data['pages']=result.get("pages","")
+                count =len(result)
+                if count>0:
+                    for item in result:
                         
+                        # print(item)
+                        if item.get("ENTRYTYPE")=='article':
+                            print("article obtained")
+                            pubDate=datetime.date(int(item.get('year','1111')),1,1)
+                            new_journal =Article.objects.create(
+                                title =item.get('title'),
+                                co_authors=item.get('author'),
+                                pub_date=pubDate,
+                                author =request.user,
+                                journal =item.get('journal',''),
+                                volume =item.get('volume',0),
+                                pages =item.get('pages',''),
+                                publisher =item.get('publisher', '')
+                            )
+                            new_journal.save()
+                            print('journal saved successfully---')
 
+                            
+                        elif item.get("ENTRYTYPE")=='inproceedings':
+                            print("proceedings obtained")
+                            pubDate=datetime.date(int(item.get('year','1111')),1,1)
+                            new_obj =ConferenceArticle.objects.create(
+                                title =item.get('title'),
+                                co_authors=item.get('author'),
+                                pub_date=pubDate,
+                                author =request.user,
+                                conference_name =item.get('booktitle',''),
+                                volume =item.get('volume',0),
+                                pages =item.get('pages',''),
+                                publisher =item.get('organization', '')
 
-                    # if type == 'journal':
-                    #     print("yes it is journal")
-                    #     form = forms.CreateArticle(initial=data)
+                            )
+                            # new_obj.save(commit=False)
+                            # new_obj.author =request.user
+                            new_obj.save()
+                            print("object saved successfully")
 
-                    # elif type == 'conference':
-                    #     form = forms.CreateConference(initial=data)
-                    # elif type == 'Book':
-                    #     form = forms.CreateBook(initial=data)
-
+                        print('--------------------')
+        messages.info(request, '%s new models added'%count)
+        return HttpResponseRedirect(reverse('article:list'))
+            
     return render(request,"bibtexForm.html",{'biptex':biptexForm})

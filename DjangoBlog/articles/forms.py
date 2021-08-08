@@ -33,7 +33,6 @@ class CreateConference(forms.ModelForm):
         exclude =['slug','author']
         widgets={
             "pub_date": DateInput(),
-            "organised_date":DateInput()
         }
 
 

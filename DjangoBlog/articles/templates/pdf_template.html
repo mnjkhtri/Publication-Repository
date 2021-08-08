@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous"> -->
 
     <title>Show Info</title>
 
@@ -39,6 +39,7 @@
         <div class="row justify-content-center">
             <div class="col-md-12">
               {% ifequal format 'MLA'%}
+              <h1>MLA Format</h1>
               
                 <hr>
                 {% for article in articles %}
@@ -50,6 +51,12 @@
 
                 {% for book in books %}
                 <p>{{book.author.last_name}}, {{book.author.first_name}},et.al "{{book.title}}.",vol.{{book.volume}},{{book.get_pub_year}},pp.{{book.pages}}</p>
+                <hr>
+                <br>
+
+                {% endfor %}
+                {% for conference in conferences %}
+                <p>{{conference.author.last_name}}, {{conference.author.first_name}},et.al "{{conference.title}}.",vol.{{conference.volume}},{{conference.get_pub_year}},pp.{{conference.pages}}</p>
                 <hr>
                 <br>
 
