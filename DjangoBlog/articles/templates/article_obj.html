@@ -9,7 +9,9 @@
     {% endif %}
     <p>Description:{{article.description}}</p>
     <p>Pub Date:{{article.pub_date.year}}</p>
+    {% ifnotequal article.volume 0 %}
     <p>Volume: {{article.volume}}</p>
+    {% endifnotequal %}
     <p>Pages:{{article.pages}}</p>
     {% if article.citations %}
     <p>Citations:{{article.citations}}</p>

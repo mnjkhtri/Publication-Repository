@@ -48,7 +48,7 @@
             <ul class="nav_list">
                 {% if user.is_authenticated %}
                 <li><a href="{% url 'article:list'%}"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="#Profile"><i class="fas fa-id-badge"></i> Profile</a></li>
+                <li><a href="{% url 'article:profile' %}"><i class="fas fa-id-badge"></i> Profile</a></li>
                 <li><i class="fas fa-plus-circle"></i>Add New Post <i class="fas fa-caret-down"></i></li>
                 <ul class="create-list">
                     <li><a href="{% url 'article:create' type='journal'%}"><i class="far fa-newspaper"></i>Journal article</a> </li>

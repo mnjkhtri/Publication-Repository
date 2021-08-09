@@ -268,3 +268,9 @@ def bibtexPopulator(request):
         return HttpResponseRedirect(reverse('article:list'))
             
     return render(request,"bibtexForm.html",{'biptex':biptexForm})
+
+
+
+def ProfilePage(request):
+    return render(request,"profile.html")
+    
