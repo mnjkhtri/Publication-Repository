@@ -33,15 +33,15 @@
    
 }
 .logo img{
-    width: 20%;
+    height: 50px;
     border: 3px solid goldenrod;
     border-radius: 50px;
     display: block;
     margin:0%;
-    margin-right: 30px;
+    
 }
 .text-big{
-
+    margin-left: 4px;
     font-size: 35px;
     font-family: cursive;
     font-weight: bold;
@@ -55,6 +55,7 @@
     top: 0;
     cursor: pointer;
     justify-content:center;
+    z-index: 2;
     
     
 }
@@ -116,20 +117,20 @@
 
 .firsthalf{
     width: 22%;
+    height: 100vh;
     align-items: left;
     display: flex;
     justify-content:left;
     flex-direction: column;
     text-align: left ;
     color: white;
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 70%;
     position: fixed;
     
 }
 .secondhalf{
    background-color: rgb(197, 186, 188);
+   overflow: hidden;
+   padding: 10px;
     
 }
 
@@ -221,8 +222,8 @@
 }
 .secondhalf{
     width: 78%;
-    overflow: auto ;
-    margin-left: 24%;
+   
+    margin-left: 22%;
 }
 .background2{
     background: rgba(0, 0, 0,0.7)url('img/white.jpg');
@@ -294,7 +295,7 @@
     
 }
 
-.btn
+/* .btn
 {   vertical-align: middle;
     padding:6px 17px;
     margin: 7px 0;
@@ -307,9 +308,9 @@
     font-family: 'Times New Roman', Times, serif;
     font-weight: bold;
     background-color: cadetblue;
-    }
+    } */
 
-.btn-dark{
+/* .btn-dark{
     color:rgb(146, 83, 83);
     border: 2px solid rgb(230, 226, 226);
     width: max-content;
@@ -318,7 +319,7 @@
    font-weight: lighter;
     align-items: center;
     
-}
+} */
 .btn-dark:hover{
     
     color:gray;
