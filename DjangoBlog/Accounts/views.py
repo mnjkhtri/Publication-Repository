@@ -2,7 +2,7 @@ from django.http import request
 from django.shortcuts import render,redirect
 from django.contrib.auth.forms import UserCreationForm,AuthenticationForm
 from django.contrib.auth import login,logout
-from .forms import SignUpForm
+from .forms import SignUpForm,LoginForm
 
 # Create your views here.
 def signup_view(request):
@@ -14,11 +14,12 @@ def signup_view(request):
             return redirect('article:list')
     else:
         form=SignUpForm()
+        print(form)
     return render(request,'signup.html',{'form':form})
 
 def login_view(request):
     if request.method=='POST':
-        form = AuthenticationForm(data=request.POST)    
+        form = LoginForm(data=request.POST)    
         if form.is_valid():
             user = form.get_user()
             login(request,user)
@@ -28,7 +29,7 @@ def login_view(request):
                 return redirect('article:list')
     else:
 
-        form=AuthenticationForm()
+        form=LoginForm()
     return render(request,'login.html',{'form':form})
 
 def logout_view(request):

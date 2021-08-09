@@ -14,7 +14,7 @@
 </head>
 <body>
 
-    <nav class="navbar background h-nav">
+    <nav class="navbar navbar-dark bg-dark">
         <ul class="nav-list1 v-class">
             <div class="logo"><img src="{% static 'img/logo.png'%}" alt="logo"></div>
             <div class="text-big ">Personal Publication Repository </div>
@@ -25,14 +25,14 @@
                 {% if user.is_authenticated %}
                 <form action="{% url 'accounts:logout' %}" method="POST">
                     {%csrf_token%}
-                    <button type="submit"class="btn btn-dark">Log Out</buttton>
+                    <button type="submit"class="btn btn-danger">Log Out</buttton>
                 </form>
 
                 
 
               {% else %}
-              <li><a href="{% url 'accounts:login' %}" class="btn btn-dark">LogIn</a></li>
-              <li><a href="{% url 'accounts:signup' %}" class="btn btn-dark">SignUp</a></li>
+              <li><a href="{% url 'accounts:login' %}" class="btn btn-info">LogIn</a></li>
+              <li><a href="{% url 'accounts:signup' %}" class="btn btn-info">SignUp</a></li>
                
               {% endif %}
 
