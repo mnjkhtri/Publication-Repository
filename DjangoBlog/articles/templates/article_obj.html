@@ -2,6 +2,7 @@
 {% block content %}
 
 <div class='article'>
+    <a class="btn btn-secondary" href="{% url 'article:edit-data' type=type slug=article.slug %}">Edit</a>
     <h2>TITLE:{{article.title}}</h2>
     <p>Authors:{{article.getAuthors}}</p>
     {% if article.journal %}

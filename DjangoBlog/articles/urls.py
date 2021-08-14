@@ -27,6 +27,8 @@ urlpatterns = [
     path('export-excel', views.create_excelSheet , name="export-excel"),
     path('bibtexUpload',views.bibtexPopulator, name='bibtex-upload'),
     path('profile',views.ProfilePage, name='profile'),
-    url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
+    path('<str:type>/<str:slug>/edit',views.EditArticle, name="edit-data"),
+    url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), 
+    #name catching block in the url
    
 ]

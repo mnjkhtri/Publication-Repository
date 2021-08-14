@@ -186,15 +186,18 @@ def article_detail(request, slug):
    # form = forms.CreateArticle()
     
     if Article.objects.filter(slug=slug).exists():
+        type ='article'
         article =Article.objects.get(slug=slug)
     elif Book.objects.filter(slug=slug).exists():
+        type ='book'
         article=Book.objects.get(slug=slug)
 
     elif ConferenceArticle.objects.filter(slug=slug).exists():
+        type ='conference'
         article=ConferenceArticle.objects.get(slug=slug)
 
     
-    return render(request, 'article_obj.html', {'article': article})
+    return render(request, 'article_obj.html', {'article': article,'type':type})
 
 
 def readbibtex(f):
@@ -273,4 +276,48 @@ def bibtexPopulator(request):
 
 def ProfilePage(request):
     return render(request,"profile.html")
+    
+
+
+def EditArticle(request,type,slug):
+    print("type:"+type)
+    print('slug:'+slug)
+    
+    
+    
+    if type == 'article':
+        form_data =Article.objects.get(slug=slug)
+        print('form data----------------')
+        print(form_data)
+        print("yes it is journal")
+        form = forms.CreateArticle(instance=form_data)
+
+    elif type == 'conference':
+        form_data =ConferenceArticle.objects.get(slug=slug)
+        form = forms.CreateConference(instance=form_data)
+
+    elif type == 'Book':
+        form_data =ConferenceArticle.objects.get(slug=slug)
+        form = forms.CreateBook(instance=form_data)
+
+    if request.method =="POST":
+        if type =='article':
+            form =forms.CreateArticle(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+
+        elif type =='conference':
+            form =forms.CreateConference(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+        
+        print(request.POST)
+
+
+    
+    # print(form)
+    return render(request,"edit.html",{"form":form,"type":type,
+    'slug':slug})
     
