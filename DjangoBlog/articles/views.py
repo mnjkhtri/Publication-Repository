@@ -71,7 +71,7 @@ def create_excelSheet(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['Title', 'authors', 'volume ', 'pub_date', ]
+    columns = ['Title', 'authors', 'Journal','Date','volume', 'pages','ArticleLink','Journal Type','SJR rating','Impact Factor','Peer Reviewed','DOI' ]
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -82,7 +82,7 @@ def create_excelSheet(request):
     style2 =xlwt.XFStyle()
     style2.num_format_str ='dd/mm/yyyy'
 
-    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors', 'volume', 'pub_date')
+    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors','journal','pub_date', 'volume', 'pages','article_link','journal_type','sjrRating','impactFactor','peer_reviewed','DOI')
     print("the journals are-------------")
     print(journals)
 
@@ -90,7 +90,7 @@ def create_excelSheet(request):
     for row in journals:
         row_num += 1
         for col_num in range(len(row)):
-            if col_num ==3: 
+            if col_num ==5: 
                 #date column
                 ws.write(row_num, col_num, row[col_num], style2)
             else:
@@ -102,14 +102,14 @@ def create_excelSheet(request):
     row_num+=3 # gap of three rows
 
 
-    columns = ['Title', 'authors', 'conference_name ', 'pub_date', ]
+    columns = ['Title', 'Authors', 'ConferenceName ', 'Date','Volume','Pages','Link','Publisher','DOI' ]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
     
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date')
+    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date','volume','pages','conference_link','publisher','DOI')
     for row in conferences:
         row_num += 1
         for col_num in range(len(row)):
@@ -203,7 +203,7 @@ def article_detail(request, slug):
 def readbibtex(f):
     bib_database = bibtexparser.load(f)
     print('bib database entries-------------')
-    print(bib_database)
+    print(bib_database.entries)
     print('------------------------------------')
     return bib_database.entries  # returns dict
 
