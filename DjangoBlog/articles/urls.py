@@ -29,6 +29,7 @@ urlpatterns = [
     path('bibtexUpload',views.bibtexPopulator, name='bibtex-upload'),
     path('profile',views.ProfilePage, name='profile'),
     path('<str:type>/<str:slug>/edit',views.EditArticle, name="edit-data"),
+    path('<str:type>/<str:slug>/delete',views.DeleteArticle, name="delete-data"),
     url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), 
     #name catching block in the url
    

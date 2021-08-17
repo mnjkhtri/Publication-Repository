@@ -30,6 +30,7 @@
             <p >{{article.getAuthors}}</p>
             <p>{{article.journal}} {{article.pages}}</p>
             <a class="btn btn-secondary" href="{% url 'article:edit-data' type='article' slug=article.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='article' slug=article.slug %}">Delete</a>
 
         </div>
         {%endfor%}
@@ -40,6 +41,7 @@
             <p>{{book.getAuthors}}</p>
             <p> {{book.pages}}</p>
             <a class="btn btn-secondary" href="{% url 'article:edit-data' type='book' slug=article.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='book' slug=article.slug %}">Delete</a>
 
         </div>
         {%endfor%}
@@ -51,6 +53,7 @@
             <p style="overflow: hidden;">{{article.getAuthors}}</p>
             <p>{{article.conference_name}}, {{article.pages}}</p>
             <a class="btn btn-secondary" href="{% url 'article:edit-data' type='conference' slug=article.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='conference' slug=article.slug %}">Delete</a>
         </div>
         {%endfor%}
 

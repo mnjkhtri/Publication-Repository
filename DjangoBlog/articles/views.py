@@ -7,6 +7,7 @@ from .models import Article,Book,ConferenceArticle
 from django.contrib.auth.decorators import login_required
 from .import forms
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 import bibtexparser
 from bibtexparser.bibdatabase import BibDatabase
@@ -130,6 +131,8 @@ def create_BibtexSheet(request):
     print('bibtex from create bibtex')
     bib_entries = []
     conferences =ConferenceArticle.objects.filter(author =request.user)
+    #export works fine for now but the missing fields and the default
+    #fields are yet to be worked on
 
     for article in articles:
         bib_item ={
@@ -378,3 +381,28 @@ def EditArticle(request,type,slug):
     return render(request,"edit.html",{"form":form,"type":type,
     'slug':slug})
     
+def DeleteArticle(request,type,slug):
+    #objection deletion logic here
+    if type == 'article':
+        item =get_object_or_404(Article,slug =slug)
+        item.delete()
+        messages.info(request, 'one article deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+    elif type == 'conference':
+        item =get_object_or_404(ConferenceArticle,slug =slug)
+        item.delete()
+        messages.info(request, 'one conference deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+    elif type == 'Book':
+        item =get_object_or_404(Book,slug =slug)
+        item.delete()
+        messages.info(request, 'one book deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+
+    return HttpResponse("<h1>Invalid item selected</h1>")
