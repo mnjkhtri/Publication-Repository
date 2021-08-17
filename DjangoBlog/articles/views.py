@@ -9,6 +9,8 @@ from .import forms
 from django.contrib import messages
 
 import bibtexparser
+from bibtexparser.bibdatabase import BibDatabase
+from bibtexparser.bwriter import BibTexWriter
 import datetime
 import csv
 import xlwt #for excel export
@@ -123,7 +125,60 @@ def create_excelSheet(request):
     return response
     # return HttpResponse("this will be excel sheet export")
 
+def create_BibtexSheet(request):
+    articles = Article.objects.filter(author= request.user)
+    print('bibtex from create bibtex')
+    bib_entries = []
+    conferences =ConferenceArticle.objects.filter(author =request.user)
 
+    for article in articles:
+        bib_item ={
+            'journal':article.journal,
+            'pages':article.pages,
+            'title':article.title,
+            'volume':str(article.volume),
+            'year':str(article.pub_date.year),
+            'ID':article.journal_ID,
+            'ENTRYTYPE': 'article'
+
+        }
+        bib_entries.append(bib_item.copy())
+    
+    for conference in conferences:
+        bib_item={
+            
+            'pages':conference.pages,
+            'title':conference.title,
+            'volume':str(conference.volume),
+            'year':str(conference.pub_date.year),
+            'ID':conference.conference_ID,
+            'ENTRYTYPE': 'inproceedings'
+
+        }
+        bib_entries.append(bib_item.copy())
+    db = BibDatabase()
+    db.entries = bib_entries
+    # [
+    #     {'journal': 'Nice Journal',
+    #     'comments': 'A comment',
+    #     'pages': '12--23',
+    #     'title': 'An amazing title',
+    #     'year': '2013',
+    #     'volume': '12',
+    #     'ID': 'Cesar2013',
+    #     'author': 'Jean Casar',
+    #     'ENTRYTYPE': 'article'}
+        
+    # ]
+
+    # writer = BibTexWriter()
+    # writer.write(db)
+    # content = writer
+    bibtex_str = bibtexparser.dumps(db)
+    return HttpResponse(bibtex_str, content_type='text/plain')
+    
+    
+    
 
 
 def article_list(request):
@@ -241,7 +296,8 @@ def bibtexPopulator(request):
                                 journal =item.get('journal',''),
                                 volume =item.get('volume',0),
                                 pages =item.get('pages',''),
-                                publisher =item.get('publisher', '')
+                                publisher =item.get('publisher', ''),
+                                journal_ID = item.get("ID",'')
                             )
                             new_journal.save()
                             print('journal saved successfully---')
@@ -258,7 +314,8 @@ def bibtexPopulator(request):
                                 conference_name =item.get('booktitle',''),
                                 volume =item.get('volume',0),
                                 pages =item.get('pages',''),
-                                publisher =item.get('organization', '')
+                                publisher =item.get('organization', ''),
+                                conference_ID =item.get('ID','' )
 
                             )
                             # new_obj.save(commit=False)

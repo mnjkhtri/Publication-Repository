@@ -27,6 +27,7 @@ class Article(models.Model): #this is like a table with fields
     publisher =models.CharField(default=None,max_length=100)
     article_link =models.URLField(blank=True)
     DOI =models.CharField(max_length=100,blank=True)
+    journal_ID =models.CharField(max_length=100, default='')
 
     #journal specific-----
     journal_type = models.CharField(max_length=20,choices=CHOICES,default='National')
@@ -82,6 +83,7 @@ class Book(models.Model):
     description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="books")
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    book_ID =models.CharField(max_length=100, default='')
 
 
     edition = models.CharField(max_length=50, null=True, blank=True)
@@ -136,6 +138,7 @@ class ConferenceArticle(models.Model):
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
     publisher =models.CharField(default=None,max_length=100)
+    conference_ID =models.CharField(max_length=100, default='')
     
     conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
     conference_link =models.URLField(blank=True)
