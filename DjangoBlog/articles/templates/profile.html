@@ -2,4 +2,8 @@
 {% block content %}
 
 <h1>Profile section goes here</h1>
+<p>UserName:{{request.user.username}}</p>
+<p>FirstName:{{request.user.first_name}}</p>
+<p>LastName:{{request.user.last_name}}</p>
+<p>Email:{{request.user.email}}</p>
 {% endblock %}
