@@ -7,6 +7,11 @@ from django.utils.text import slugify
 # Create your models here.
 #A model for journal Article
 class Article(models.Model): #this is like a table with fields
+
+    CHOICES = [
+        ("National","National"),
+        ("International","International")
+    ]
     title = models.CharField(max_length=100)
     slug=models.SlugField()
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
@@ -16,10 +21,19 @@ class Article(models.Model): #this is like a table with fields
     volume=models.IntegerField(default=0)
     issue =models.IntegerField(default=0)
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
+    
     description =models.TextField(default="No description")
 
     publisher =models.CharField(default=None,max_length=100)
     article_link =models.URLField(blank=True)
+    DOI =models.CharField(max_length=100,blank=True)
+    journal_ID =models.CharField(max_length=100, default='')
+
+    #journal specific-----
+    journal_type = models.CharField(max_length=20,choices=CHOICES,default='National')
+    impactFactor =models.FloatField(default= 0)
+    sjrRating =models.FloatField(default=0)
+    peer_reviewed =models.BooleanField(default=False)
 
     #auto add slug before save
     def save(self, *args, **kwargs):
@@ -28,7 +42,7 @@ class Article(models.Model): #this is like a table with fields
         super(Article, self).save(*args, **kwargs)
 
     def getAuthors(self):
-        return self.author.first_name+' '+self.author.last_name+','+self.co_authors
+        return self.co_authors
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')
@@ -69,12 +83,14 @@ class Book(models.Model):
     description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="books")
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    book_ID =models.CharField(max_length=100, default='')
 
 
     edition = models.CharField(max_length=50, null=True, blank=True)
     isbn = models.CharField(max_length=50, null=True, blank=True)
     chapters = models.CharField(max_length=50, null=True, blank=True)
     book_link =models.URLField(blank=True)
+    DOI =models.CharField(max_length=100,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -85,7 +101,7 @@ class Book(models.Model):
         return self.title
 
     def getAuthors(self):
-        return self.author.first_name+' '+self.author.last_name+','+self.co_authors
+        return self.co_authors
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')
@@ -122,9 +138,11 @@ class ConferenceArticle(models.Model):
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     description =models.TextField(default="No description")
     publisher =models.CharField(default=None,max_length=100)
+    conference_ID =models.CharField(max_length=100, default='')
     
     conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
     conference_link =models.URLField(blank=True)
+    DOI =models.CharField(max_length=100,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
@@ -135,7 +153,7 @@ class ConferenceArticle(models.Model):
         return self.title
 
     def getAuthors(self):
-        return self.author.first_name+' '+self.author.last_name+','+self.co_authors
+        return self.co_authors
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')

@@ -7,8 +7,11 @@ from .models import Article,Book,ConferenceArticle
 from django.contrib.auth.decorators import login_required
 from .import forms
 from django.contrib import messages
+from django.shortcuts import get_object_or_404
 
 import bibtexparser
+from bibtexparser.bibdatabase import BibDatabase
+from bibtexparser.bwriter import BibTexWriter
 import datetime
 import csv
 import xlwt #for excel export
@@ -71,7 +74,7 @@ def create_excelSheet(request):
     font_style = xlwt.XFStyle()
     font_style.font.bold = True
 
-    columns = ['Title', 'authors', 'volume ', 'pub_date', ]
+    columns = ['Title', 'authors', 'Journal','Date','volume', 'pages','ArticleLink','Journal Type','SJR rating','Impact Factor','Peer Reviewed','DOI' ]
 
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
@@ -82,7 +85,7 @@ def create_excelSheet(request):
     style2 =xlwt.XFStyle()
     style2.num_format_str ='dd/mm/yyyy'
 
-    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors', 'volume', 'pub_date')
+    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors','journal','pub_date', 'volume', 'pages','article_link','journal_type','sjrRating','impactFactor','peer_reviewed','DOI')
     print("the journals are-------------")
     print(journals)
 
@@ -90,7 +93,7 @@ def create_excelSheet(request):
     for row in journals:
         row_num += 1
         for col_num in range(len(row)):
-            if col_num ==3: 
+            if col_num ==5: 
                 #date column
                 ws.write(row_num, col_num, row[col_num], style2)
             else:
@@ -102,14 +105,14 @@ def create_excelSheet(request):
     row_num+=3 # gap of three rows
 
 
-    columns = ['Title', 'authors', 'conference_name ', 'pub_date', ]
+    columns = ['Title', 'Authors', 'ConferenceName ', 'Date','Volume','Pages','Link','Publisher','DOI' ]
     for col_num in range(len(columns)):
         ws.write(row_num, col_num, columns[col_num], font_style)
     
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date')
+    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date','volume','pages','conference_link','publisher','DOI')
     for row in conferences:
         row_num += 1
         for col_num in range(len(row)):
@@ -123,7 +126,62 @@ def create_excelSheet(request):
     return response
     # return HttpResponse("this will be excel sheet export")
 
+def create_BibtexSheet(request):
+    articles = Article.objects.filter(author= request.user)
+    print('bibtex from create bibtex')
+    bib_entries = []
+    conferences =ConferenceArticle.objects.filter(author =request.user)
+    #export works fine for now but the missing fields and the default
+    #fields are yet to be worked on
 
+    for article in articles:
+        bib_item ={
+            'journal':article.journal,
+            'pages':article.pages,
+            'title':article.title,
+            'volume':str(article.volume),
+            'year':str(article.pub_date.year),
+            'ID':article.journal_ID,
+            'ENTRYTYPE': 'article'
+
+        }
+        bib_entries.append(bib_item.copy())
+    
+    for conference in conferences:
+        bib_item={
+            
+            'pages':conference.pages,
+            'title':conference.title,
+            'volume':str(conference.volume),
+            'year':str(conference.pub_date.year),
+            'ID':conference.conference_ID,
+            'ENTRYTYPE': 'inproceedings'
+
+        }
+        bib_entries.append(bib_item.copy())
+    db = BibDatabase()
+    db.entries = bib_entries
+    # [
+    #     {'journal': 'Nice Journal',
+    #     'comments': 'A comment',
+    #     'pages': '12--23',
+    #     'title': 'An amazing title',
+    #     'year': '2013',
+    #     'volume': '12',
+    #     'ID': 'Cesar2013',
+    #     'author': 'Jean Casar',
+    #     'ENTRYTYPE': 'article'}
+        
+    # ]
+
+    # writer = BibTexWriter()
+    # writer.write(db)
+    # content = writer
+    bibtex_str = bibtexparser.dumps(db)
+    return HttpResponse(bibtex_str, content_type='text/plain')
+    
+    
+    
 
 
 def article_list(request):
@@ -186,21 +244,24 @@ def article_detail(request, slug):
    # form = forms.CreateArticle()
     
     if Article.objects.filter(slug=slug).exists():
+        type ='article'
         article =Article.objects.get(slug=slug)
     elif Book.objects.filter(slug=slug).exists():
+        type ='book'
         article=Book.objects.get(slug=slug)
 
     elif ConferenceArticle.objects.filter(slug=slug).exists():
+        type ='conference'
         article=ConferenceArticle.objects.get(slug=slug)
 
     
-    return render(request, 'article_obj.html', {'article': article})
+    return render(request, 'article_obj.html', {'article': article,'type':type})
 
 
 def readbibtex(f):
     bib_database = bibtexparser.load(f)
     print('bib database entries-------------')
-    print(bib_database)
+    print(bib_database.entries)
     print('------------------------------------')
     return bib_database.entries  # returns dict
 
@@ -238,7 +299,8 @@ def bibtexPopulator(request):
                                 journal =item.get('journal',''),
                                 volume =item.get('volume',0),
                                 pages =item.get('pages',''),
-                                publisher =item.get('publisher', '')
+                                publisher =item.get('publisher', ''),
+                                journal_ID = item.get("ID",'')
                             )
                             new_journal.save()
                             print('journal saved successfully---')
@@ -255,7 +317,8 @@ def bibtexPopulator(request):
                                 conference_name =item.get('booktitle',''),
                                 volume =item.get('volume',0),
                                 pages =item.get('pages',''),
-                                publisher =item.get('organization', '')
+                                publisher =item.get('organization', ''),
+                                conference_ID =item.get('ID','' )
 
                             )
                             # new_obj.save(commit=False)
@@ -268,3 +331,78 @@ def bibtexPopulator(request):
         return HttpResponseRedirect(reverse('article:list'))
             
     return render(request,"bibtexForm.html",{'biptex':biptexForm})
+
+
+
+def ProfilePage(request):
+    return render(request,"profile.html")
+    
+
+
+def EditArticle(request,type,slug):
+    print("type:"+type)
+    print('slug:'+slug)
+    
+    
+    
+    if type == 'article':
+        form_data =Article.objects.get(slug=slug)
+        print('form data----------------')
+        print(form_data)
+        print("yes it is journal")
+        form = forms.CreateArticle(instance=form_data)
+
+    elif type == 'conference':
+        form_data =ConferenceArticle.objects.get(slug=slug)
+        form = forms.CreateConference(instance=form_data)
+
+    elif type == 'Book':
+        form_data =ConferenceArticle.objects.get(slug=slug)
+        form = forms.CreateBook(instance=form_data)
+
+    if request.method =="POST":
+        if type =='article':
+            form =forms.CreateArticle(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+
+        elif type =='conference':
+            form =forms.CreateConference(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+        
+        print(request.POST)
+
+
+    
+    # print(form)
+    return render(request,"edit.html",{"form":form,"type":type,
+    'slug':slug})
+    
+def DeleteArticle(request,type,slug):
+    #objection deletion logic here
+    if type == 'article':
+        item =get_object_or_404(Article,slug =slug)
+        item.delete()
+        messages.info(request, 'one article deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+    elif type == 'conference':
+        item =get_object_or_404(ConferenceArticle,slug =slug)
+        item.delete()
+        messages.info(request, 'one conference deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+    elif type == 'Book':
+        item =get_object_or_404(Book,slug =slug)
+        item.delete()
+        messages.info(request, 'one book deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
+
+    return HttpResponse("<h1>Invalid item selected</h1>")

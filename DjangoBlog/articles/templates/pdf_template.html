@@ -12,18 +12,28 @@
 
     <style>
       p{
-        font-size: 20px;
+        font-size: 15px;
+        color: rgb(119, 71, 71);
+        font-weight: 400;
+       
+        
+      }
+      h1{
+        color: rgb(119, 71, 71);
+        font-size: x-large;
+        margin-left:200pt;
       }
     
       @page {
           padding: 20px;
           size: letter portrait;
+          font-family: Arial, Helvetica, sans-serif;
           @frame content_frame {
               left: 50pt;
               width: 512pt;
               top: 50pt;
               height: 692pt;
-              -pdf-frame-border: 1;    /* for debugging the layout */
+              /* -pdf-frame-border: 1;    for debugging the layout */
           }
       }
       
@@ -40,22 +50,18 @@
               
                 <hr>
                 {% for article in articles %}
-                <p>{{article.author.last_name}}, {{article.author.first_name}},et.al "{{article.title}}."<i>{{article.journal}}</i>,vol.{{article.volume}},{{article.get_pub_year}},pp.{{article.pages}}</p>
-                <hr>
-                <br>
-
+                <p>{{article.author.last_name}}, {{article.author.first_name}},et.al "{{article.title}}."<i>{{article.journal}}</i>,vol.{{article.volume}},{{article.get_pub_year}},pp.{{article.pages}}</p> 
+              
                 {% endfor %}
 
                 {% for book in books %}
                 <p>{{book.author.last_name}}, {{book.author.first_name}},et.al "{{book.title}}.",vol.{{book.volume}},{{book.get_pub_year}},pp.{{book.pages}}</p>
-                <hr>
-                <br>
-
+                
                 {% endfor %}
                 {% for conference in conferences %}
                 <p>{{conference.author.last_name}}, {{conference.author.first_name}},et.al "{{conference.title}}.",vol.{{conference.volume}},{{conference.get_pub_year}},pp.{{conference.pages}}</p>
-                <hr>
-                <br>
+                
+               
 
                 {% endfor %}
 
@@ -69,15 +75,12 @@
                   ({{article.issue}}).{{article.pages}}
                   {% endif %}
                 </p>
-                <hr>
-                <br>
-
+               
                 {% endfor %}
 
                 {% for book in books %}
                 <p>{{book.author.last_name}}, {{book.author.first_name}},et.al "{{book.title}}.",vol.{{book.volume}},{{book.get_pub_year}},pp.{{book.pages}}</p>
-                <hr>
-                <br>
+             
 
                 {% endfor %}
                 {% for conference in conferences %}
@@ -86,8 +89,7 @@
                   ({{conference.get_pub_year}})
                   {% endif %}
                    {{conference.title}}.In<i>{{conference.conference_name}}</i> .(vol.{{conference.volume}},pp.{{conference.pages}}).{{conference.pulbisher}}</p>
-                <hr>
-                <br>
+             
                 {% endfor %}
 
 

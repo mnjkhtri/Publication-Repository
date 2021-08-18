@@ -25,7 +25,12 @@ urlpatterns = [
     path('',views.article_list,name='list'),
     path('export-pdf/<str:export_Format>', views.create_pdf , name="export-pdf"),
     path('export-excel', views.create_excelSheet , name="export-excel"),
+    path('export-bibtex', views.create_BibtexSheet , name="export-bibtex"),
     path('bibtexUpload',views.bibtexPopulator, name='bibtex-upload'),
-    url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), #name catching block in the url
+    path('profile',views.ProfilePage, name='profile'),
+    path('<str:type>/<str:slug>/edit',views.EditArticle, name="edit-data"),
+    path('<str:type>/<str:slug>/delete',views.DeleteArticle, name="delete-data"),
+    url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), 
+    #name catching block in the url
    
 ]

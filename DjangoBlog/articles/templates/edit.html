@@ -1,0 +1,21 @@
+{% extends 'base_layout.html' %}
+{% block content %}
+<h1>edit form</h1>
+<form action="{% url 'article:edit-data' type=type slug=slug %}"  method="POST" class="form-site" enctype="multipart/form-data">
+	{%csrf_token%}
+	{% for field in form %}
+	<p>
+	  {{ field.label_tag }}<br>
+	  {{ field }}
+	  {% if field.help_text %}
+	    <small style="color: grey">{{ field.help_text }}</small>
+	  {% endif %}
+	  {% for error in field.errors %}
+	    <p style="color: red">{{ error }}</p>
+	  {% endfor %}
+	</p>
+      {% endfor %}
+	<input type="submit" value="Create">
+    </form>
+
+{% endblock %}
