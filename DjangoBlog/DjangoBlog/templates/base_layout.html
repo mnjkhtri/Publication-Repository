@@ -1,80 +1,136 @@
 {% load static %}
-
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <link rel="stylesheet" href="{%static 'styles.css' %}">
-    <script src="https://kit.fontawesome.com/ce5570254b.js" crossorigin="anonymous"></script>
-</head>
-<body>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400&display=swap" rel="stylesheet">
 
-    <nav class="navbar navbar-dark bg-dark">
-        <ul class="nav-list1 v-class">
-            <div class="logo"><img src="{% static 'img/logo.png'%}" alt="logo"></div>
-            <div class="text-big ">Personal Publication Repository </div>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500&display=swap" rel="stylesheet">
 
-        </ul>
-        <div class="rightNav">
+    <link href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+    
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    
+    <!-- Style -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <title>Publication Repository</title>
+  </head>
+  <body class="show-sidebar">
+    
+  
+    
+    <aside class="sidebar">
+      <div class="toggle">
+        <a href="#" class="burger js-menu-toggle active" data-toggle="collapse" data-target="#main-navbar">
+              <span></span>
+            </a>
+      </div>
+      <div class="side-inner">
+
+        <div class="profile">
+          <img src="{% static 'images/person_4.jpg' %}" alt="Image" class="img-fluid">
+          <h3 class="name">Aman Shakya</h3>
+          <span class="country">Pulchowk Campus</span>
+        </div>
+
+        
+        <div class="nav-menu">
+          
+          <ul>
+            {% if user.is_authenticated %}
+            <li class="accordion">
+              <a href="{% url 'article:list'%}" >
+                <span class="icon-home mr-3"></span>Feed
+              </a>
               
-                {% if user.is_authenticated %}
-                <form action="{% url 'accounts:logout' %}" method="POST">
-                    {%csrf_token%}
-                    <button type="submit"class="btn btn-danger">Log Out</buttton>
-                </form>
+            </li>
+            <li class="accordion">
+              <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsible">
+                <span class="icon-search2 mr-3"></span>Create Entries
+              </a>
 
+              <div id="collapseTwo" class="collapse" aria-labelledby="headingOne">
+                <div>
+                  <ul>
+                    <li><a href="{% url 'article:create' type='journal'%}"><span class="icon-book mr-3"></span>Journal</a></li>
+                    <li><a href="{% url 'article:create' type='conference'%}"><span class="icon-book mr-3"></span>Conference</a></li>
+                    <li><a href="{% url 'article:create' type='Book'%}"><span class="icon-book mr-3"></span>Book</a></li>
+                    <li><a href="{% url 'article:bibtex-upload' %}"><span class="icon-upload mr-3"></span>Bibtex Upload</a></li>
+                  </ul>
+                </div>
+              </div>
+
+            </li>
+            <li><a href="{% url 'article:profile' %}"><span class="icon-user mr-3"></span>Profile</a></li>
+            <li>
+            <form action="{% url 'accounts:logout' %}" method="POST">
+              {%csrf_token%}
+              <button type="submit"><span ></span>sign Out</buttton>
+          </form>
+        </li>
+            
+            
+
+            {% else %}
+            <li><a href="{% url 'accounts:login' %}"><span class="icon-key mr-3"></span>LogIn</a></li>
+            <li><a href="{% url 'accounts:signup' %}"><span class="icon-enter mr-3"></span>Sign Up</a></li>
+
+
+
+            {% endif %}
+
+          </ul>
+
+        </div>
+      </div>
+      
+    </aside>
+    <main>
+      <div class="site-section">
+        <div class="container">
+          <div class="row justify-content-center">
+
+
+
+
+
+           
+              
+                <div class="secondhalf">
+                  {% block content %}
+                  {% endblock %}
+                </div>
                 
 
-              {% else %}
-              <li><a href="{% url 'accounts:login' %}" class="btn btn-info">LogIn</a></li>
-              <li><a href="{% url 'accounts:signup' %}" class="btn btn-info">SignUp</a></li>
-               
-              {% endif %}
-
-        </div>
-       
-
-    </nav>
-    <section class="firstSection">
-    <div class="box-main background2">
-        {% if user.is_authenticated %}
-        <div class="firsthalf background">
                 
-            <ul class="nav_list">
-                {% if user.is_authenticated %}
-                <li><a href="{% url 'article:list'%}"><i class="fas fa-home"></i>Home</a></li>
-                <li><a href="{% url 'article:profile' %}"><i class="fas fa-id-badge"></i> Profile</a></li>
-                <li><i class="fas fa-plus-circle"></i>Add New Post <i class="fas fa-caret-down"></i></li>
-                <ul class="create-list">
-                    <li><a href="{% url 'article:create' type='journal'%}"><i class="far fa-newspaper"></i>Journal article</a> </li>
-                    <li><a href="{% url 'article:create' type='conference'%}"><i class="fas fa-newspaper"></i>Conference</a> </li>
-                    <li><a href="{% url 'article:create' type='Book'%}"><i class="fas fa-book"></i>Book</a> </li>
-                    <li><a href="{% url 'article:bibtex-upload' %}"><i class="fas fa-upload"></i>Bibtex Upload</a> </li>
-                  
-                </ul>
-                <li><a href="#Search"><i class="fas fa-search"></i>Search</a></li>
-                {% endif %}
-               
+                
 
-            </ul>
-        {% endif %}
+                
+                
 
+                
+                
+            
+
+
+          </div>
         </div>
+      </div>  
+    </main>
+    
+    
 
-        
-
-        
-        <div class="secondhalf">
-            {% block content %}
-            {% endblock %}
-        </div>
-    </div>
-</section>
-
-</body>
+    <script src="{% static 'js/jquery-3.3.1.min.js'%}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'js/main.js' %}"></script>
+  </body>
 </html>
