@@ -134,10 +134,10 @@ def create_BibtexSheet(request):
 
     for article in articles:
         bib_item ={
+            'title':article.title,
+            'author':article.co_authors,
             'journal':article.journal,
             'pages':article.pages,
-            'author':article.co_authors,
-            'title':article.title,
             'volume':str(article.volume),
             'year':str(article.pub_date.year),
             'ID':article.journal_ID,
@@ -148,6 +148,8 @@ def create_BibtexSheet(request):
             bib_item['volume'] =str(article.volume)
         if article.pages !='':
             bib_item['pages'] =article.pages
+        if article.publisher !='':
+            bib_item['publisher'] =article.publisher
 
         bib_entries.append(bib_item.copy())
     
@@ -156,9 +158,9 @@ def create_BibtexSheet(request):
             
             'title':conference.title,
             'author':conference.co_authors,
+            'book_title':conference.conference_name,
             'year':str(conference.pub_date.year),
             'ID':conference.conference_ID,
-            'book_title':conference.conference_name,
             'ENTRYTYPE': 'inproceedings'
 
         }
@@ -172,9 +174,9 @@ def create_BibtexSheet(request):
     for book in books:
         bib_item={
             
-            'pages':book.pages,
             'title':book.title,
             'author':book.co_authors,
+            'pages':book.pages,
             'volume':str(book.volume),
             'year':str(book.pub_date.year),
             'ID':book.book_ID,
@@ -410,7 +412,7 @@ def EditArticle(request,type,slug):
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect(reverse('article:list'))
-                
+
         elif type =='Book':
             form =forms.CreateBook(request.POST,instance=form_data)
             if form.is_valid():

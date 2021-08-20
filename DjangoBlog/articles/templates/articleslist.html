@@ -11,9 +11,9 @@
 {% endif %}
 <br>
 <br> 
-
 {% if messages %}
-<ul class="messages">
+<div class=" alert alert-dark messages">
+<ul>
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
@@ -21,6 +21,8 @@
     </li>
     {% endfor %}
 </ul>
+
+</div>
 {% endif %}
 
 

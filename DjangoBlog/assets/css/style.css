@@ -381,10 +381,14 @@ main .post-content .post-meta {
   backdrop-filter: blur( 4px );
   -webkit-backdrop-filter: blur( 4px );
   border-radius: 10px;
+  max-width: 700px;
   margin:10px;
   padding:10px;
   border: 1px solid rgba( 255, 255, 255, 0.18 );
+  text-overflow: ellipsis;
+  overflow:hidden;
   }
+  
 .wrapper{
     
   background: rgba( 255, 255, 255, 0.25 );
@@ -429,6 +433,8 @@ main .post-content .post-meta {
 .article-headings{
   color: #111111 !important;
   font-weight: 500;
+
+  
 }
 
 .signup{
@@ -519,4 +525,13 @@ a {
 
 button:hover, a:hover {
   opacity: 0.7;
+}
+.messages{
+  
+  font-size: large;
+  color: rgb(56, 35, 35);
+
+}
+.messages ul{
+  list-style-type: none;
 }
