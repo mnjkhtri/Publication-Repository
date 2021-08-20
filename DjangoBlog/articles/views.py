@@ -95,7 +95,7 @@ def create_excelSheet(request):
         for col_num in range(len(row)):
             if col_num ==5: 
                 #date column
-                ws.write(row_num, col_num, row[col_num], style2)
+                ws.write(row_num, col_num, row[col_num], font_style)
             else:
                 ws.write(row_num, col_num, row[col_num], font_style)
 

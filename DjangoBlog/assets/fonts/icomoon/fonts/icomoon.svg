@@ -7,6 +7,7 @@
 <font-face units-per-em="1024" ascent="960" descent="-64" />
 <missing-glyph horiz-adv-x="1024" />
 <glyph unicode="&#x20;" horiz-adv-x="512" d="" />
+<glyph unicode="&#x20;" glyph-name='enter' d="M192 256h-160v-64h160v-64l96 96-96 96zM512 0v416l-192 96v-96h-192v-128h32v96h160v-288l128-64h-288v128h-32v-160z"/>
 <glyph unicode="&#xe000;" glyph-name="error" d="M554 384.667v256h-84v-256h84zM554 212.667v86h-84v-86h84zM512 852.667c236 0 426-190 426-426s-190-426-426-426-426 190-426 426 190 426 426 426z" />
 <glyph unicode="&#xe001;" glyph-name="error_outline" d="M512 84.667c188 0 342 154 342 342s-154 342-342 342-342-154-342-342 154-342 342-342zM512 852.667c236 0 426-190 426-426s-190-426-426-426-426 190-426 426 190 426 426 426zM470 640.667h84v-256h-84v256zM470 298.667h84v-86h-84v86z" />
 <glyph unicode="&#xe002;" glyph-name="warning2" d="M554 340.667v172h-84v-172h84zM554 170.667v86h-84v-86h84zM42 42.667l470 810 470-810h-940z" />

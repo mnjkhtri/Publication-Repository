@@ -34,12 +34,14 @@
             </a>
       </div>
       <div class="side-inner">
+        {% if user.is_authenticated %}
 
         <div class="profile">
-          <img src="{% static 'images/person_4.jpg' %}" alt="Image" class="img-fluid">
+          <img src="{% static 'images/person_4.png' %}" alt="Image" class="img-fluid">
           <h3 class="name">Aman Shakya</h3>
           <span class="country">Pulchowk Campus</span>
         </div>
+        {% endif %}
 
         
         <div class="nav-menu">
@@ -52,9 +54,10 @@
               </a>
               
             </li>
+            <li><a href="{% url 'article:profile' %}"><span class="icon-user mr-3"></span>Profile</a></li>
             <li class="accordion">
               <a href="#" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="collapsible">
-                <span class="icon-search2 mr-3"></span>Create Entries
+                <span class="icon-plus mr-3"></span>Create Entries
               </a>
 
               <div id="collapseTwo" class="collapse" aria-labelledby="headingOne">
@@ -69,13 +72,8 @@
               </div>
 
             </li>
-            <li><a href="{% url 'article:profile' %}"><span class="icon-user mr-3"></span>Profile</a></li>
-            <li>
-            <form action="{% url 'accounts:logout' %}" method="POST">
-              {%csrf_token%}
-              <button type="submit"><span ></span>sign Out</buttton>
-          </form>
-        </li>
+            
+            
             
             
 
@@ -86,11 +84,20 @@
 
 
             {% endif %}
+           
 
           </ul>
 
         </div>
-      </div>
+        {% if user.is_authenticated %}
+        <div style="position: absolute;bottom: 25px; width: 80% ;margin-left:10px;">
+        <form action="{% url 'accounts:logout' %}" method="POST">
+            {%csrf_token%}
+            <button type="submit" class="btn btn-danger  btn-block "><span ></span>sign Out</buttton>
+        </form>
+        {% endif %}
+        </div>
+      
       
     </aside>
     <main>

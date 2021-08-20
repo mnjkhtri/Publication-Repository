@@ -1,6 +1,7 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-<h1>edit form</h1>
+<div class="entry-edit-form">
+<h1 style="text-align: center;">Edit Entries</h1>
 <form action="{% url 'article:edit-data' type=type slug=slug %}"  method="POST" class="form-site" enctype="multipart/form-data">
 	{%csrf_token%}
 	{% for field in form %}
@@ -15,7 +16,8 @@
 	  {% endfor %}
 	</p>
       {% endfor %}
-	<input type="submit" value="Create">
+	<input type="submit" class="btn btn-success" value="submit">
     </form>
+</div>
 
 {% endblock %}

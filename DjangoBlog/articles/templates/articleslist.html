@@ -1,11 +1,13 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 {% if user.is_authenticated %}
+<div class="export-div ">
 <a href="{% url 'article:export-pdf' export_Format='MLA'%}" class="btn btn-dark">Export as MLA</a>
 
 <a href="{% url 'article:export-pdf' export_Format='APA'%}" class="btn btn-dark">Export as APA </a>
 <a href="{% url 'article:export-excel' %}" class="btn btn-dark">Export as Excel Sheet </a>
 <a href="{% url 'article:export-bibtex' %}" class="btn btn-dark">Export as Bibtex  </a>
+</div>
 {% endif %}
 <br>
 <br> 
