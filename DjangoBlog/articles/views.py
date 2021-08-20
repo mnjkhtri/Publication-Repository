@@ -246,6 +246,7 @@ def article_create(request, type):
         form = forms.CreateBook()
 
     if request.method == 'POST':
+        print(type)
         print("Post request")
         if type == 'journal':
             print("yes it is journal")
@@ -394,7 +395,7 @@ def EditArticle(request,type,slug):
         form = forms.CreateConference(instance=form_data)
 
     elif type == 'Book':
-        form_data =ConferenceArticle.objects.get(slug=slug)
+        form_data =Book.objects.get(slug=slug)
         form = forms.CreateBook(instance=form_data)
 
     if request.method =="POST":
@@ -406,6 +407,12 @@ def EditArticle(request,type,slug):
 
         elif type =='conference':
             form =forms.CreateConference(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+                
+        elif type =='Book':
+            form =forms.CreateBook(request.POST,instance=form_data)
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect(reverse('article:list'))

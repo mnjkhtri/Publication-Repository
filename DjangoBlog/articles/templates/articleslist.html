@@ -42,8 +42,8 @@
             <h2><a href="{% url 'article:detail' slug=book.slug %}">{{book.title}}</a></h2>
             <p>{{book.getAuthors}}</p>
             <p> {{book.pages}}</p>
-            <a class="btn btn-secondary" href="{% url 'article:edit-data' type='book' slug=article.slug %}">Edit</a>
-            <a class="btn btn-danger" href="{% url 'article:delete-data' type='book' slug=article.slug %}">Delete</a>
+            <a class="btn btn-secondary" href="{% url 'article:edit-data' type='Book' slug=book.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='Book' slug=book.slug %}">Delete</a>
 
         </div>
         {%endfor%}
