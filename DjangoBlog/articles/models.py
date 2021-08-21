@@ -12,9 +12,9 @@ class Article(models.Model): #this is like a table with fields
         ("National","National"),
         ("International","International")
     ]
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=300)
     slug=models.SlugField()
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
+    co_authors =models.CharField(max_length=300,help_text="enter coauthors seperated by and", default=None)
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="journals")
     pub_date=models.DateField(blank=True,default=None)#some donot have months, need fixation, can be done with integer field
     journal =models.CharField(max_length=100,blank=True)
@@ -76,9 +76,9 @@ class Article(models.Model): #this is like a table with fields
     
    
 class Book(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=400)
     slug=models.SlugField()
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by and", default=None)
+    co_authors =models.CharField(max_length=300,help_text="enter coauthors seperated by and", default=None)
     pub_date=models.DateField(blank=True,default=None)
     description =models.TextField(default="No description")
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="books")
@@ -129,9 +129,9 @@ class Book(models.Model):
 
 
 class ConferenceArticle(models.Model):
-    title = models.CharField(max_length=100)
+    title = models.CharField(max_length=400)
     slug=models.SlugField()
-    co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
+    co_authors =models.CharField(max_length=300,help_text="enter coauthors seperated by commas", default=None)
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="conferenceArticle")
     pub_date=models.DateField(blank=True,default=None)
     volume=models.IntegerField(default=0)

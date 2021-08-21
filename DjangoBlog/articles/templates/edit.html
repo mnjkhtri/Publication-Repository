@@ -1,7 +1,7 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 <div class="entry-edit-form">
-<h1 style="text-align: center;">Edit Entries</h1>
+<h1 style="text-align: center;">Edit {{type}}</h1>
 <form action="{% url 'article:edit-data' type=type slug=slug %}"  method="POST" class="form-site" enctype="multipart/form-data">
 	{%csrf_token%}
 	{% for field in form %}

@@ -17,7 +17,7 @@ class CreateArticle(forms.ModelForm):
     class Meta:
         model = models.Article
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','journal_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -74,10 +74,7 @@ class CreateArticle(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),
-            'journal_ID':widgets.TextInput(attrs={
-                'class': "form-control",
-                'style': 'min-width: 500px;',
-                }),
+            
             'journal_type':forms.Select(attrs={
                 'class':'form-control'}),
 
@@ -111,7 +108,7 @@ class CreateBook(forms.ModelForm):
     class Meta:
         model = models.Book
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','book_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -164,10 +161,7 @@ class CreateBook(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),
-            'book_ID':widgets.TextInput(attrs={
-                'class': "form-control",
-                'style': 'min-width: 500px;',
-                }),
+            
             'edition':widgets.TextInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
@@ -190,7 +184,7 @@ class CreateConference(forms.ModelForm):
     class Meta:
         model = models.ConferenceArticle
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','conference_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -242,10 +236,7 @@ class CreateConference(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),  
-            'conference_ID':widgets.TextInput(attrs={
-                'class': "form-control",
-                'style': 'min-width: 500px;',
-                }),  
+           
             }
 
 
