@@ -50,7 +50,7 @@
               
                 <hr>
                 {% for article in articles %}
-                <p>{{article.author.last_name}}, {{article.author.first_name}},et.al "{{article.title}}."<i>{{article.journal}}</i>,
+                <p>{{article.getMlaAuthors}}"{{article.title}}."<i>{{article.journal}}</i>,
                   {% ifnotequal article.volume 0 %}
                   vol.{{article.volume}},
                   {% endifnotequal %}
@@ -63,7 +63,7 @@
                 {% endfor %}
 
                 {% for book in books %}
-                <p>{{book.author.last_name}}, {{book.author.first_name}},et.al "{{book.title}}.",
+                <p>{{book.getMlaAuthors}}"{{book.title}}.",
                   {% ifnotequal book.volume 0 %}
                   vol.{{book.volume}},
                   {% endifnotequal %}
@@ -75,7 +75,7 @@
                 
                 {% endfor %}
                 {% for conference in conferences %}
-                <p>{{conference.author.last_name}}, {{conference.author.first_name}},et.al "{{conference.title}}."
+                <p>{{conference.getMlaAuthors}}"{{conference.title}}."
                   {% ifnotequal conference.volume 0 %}
                   ,vol.{{conference.volume}},
                   {% endifnotequal %}

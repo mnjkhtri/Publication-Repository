@@ -43,6 +43,26 @@ class Article(models.Model): #this is like a table with fields
 
     def getAuthors(self):
         return self.co_authors
+    
+    def getMlaAuthors(self):
+        my_list= self.co_authors.split(' and')
+        count = len(my_list)
+        
+        if count ==1:
+            res =my_list[0].replace(' ','')+'.'
+            return res           
+        elif count==2:
+            res2=my_list[1].split(',')
+            if len(res2) ==1:
+                res=my_list[0].replace(' ',' ') + ',et.al.'
+            else:
+                res=my_list[0].replace(' ','')+',and'+res2[1]+res2[0]+'.'
+                
+            return res
+
+        else:
+            return my_list[0].replace(' ','')+',et.al.'   
+
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')
@@ -102,6 +122,26 @@ class Book(models.Model):
 
     def getAuthors(self):
         return self.co_authors
+    
+    def getMlaAuthors(self):
+        my_list= self.co_authors.split(' and')
+        count = len(my_list)
+        
+        if count ==1:
+            res =my_list[0].replace(' ','')+'.'
+            return res           
+        elif count==2:
+            res2=my_list[1].split(',')
+            if len(res2) ==1:
+                res=my_list[0].replace(' ',' ') + ',et.al.'
+            else:
+                res=my_list[0].replace(' ','')+',and'+res2[1]+res2[0]+'.'
+                
+            return res
+
+        else:
+            return my_list[0].replace(' ','')+',et.al.'   
+
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')
@@ -154,6 +194,28 @@ class ConferenceArticle(models.Model):
 
     def getAuthors(self):
         return self.co_authors
+    
+    def getMlaAuthors(self):
+        my_list= self.co_authors.split(' and')
+        count = len(my_list)
+        
+        if count ==1:
+            res =my_list[0].replace(' ','')+'.'
+            return res           
+        elif count==2:
+            res2=my_list[1].split(',')
+            if len(res2) ==1:
+                res=my_list[0].replace(' ',' ') + ',et.al.'
+            else:
+                res=my_list[0].replace(' ','')+',and'+res2[1]+res2[0]+'.'
+                
+            return res
+            
+
+        else:
+            return my_list[0].replace(' ','')+',et.al.'   
+
+        
 
     def getApaAuthors(self):
         new_list = self.co_authors.split(' and')
