@@ -15,11 +15,11 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
+    <a href="https://github.com/JanakSharma2055/Publication-Repository.git">View Demo</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
+    <a href="https://github.com/JanakSharma2055/Publication-Repository.git">Report Bug</a>
     ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
+    <a href="https://github.com/JanakSharma2055/Publication-Repository.git">Request Feature</a>
   </p>
 </p>
 
