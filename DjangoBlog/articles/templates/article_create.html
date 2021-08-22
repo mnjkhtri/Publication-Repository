@@ -1,7 +1,10 @@
 {% extends 'base_layout.html' %}
 {% block content %}
-<div class='create'></div>
-<h2>Create {{type}}</h2>
+
+
+<div class="create-entry-form">
+  <h2 style="width: 100%; text-align: center;" class="h1">Create {{type}}</h2>
+  <br>
 
 <form action="{% url 'article:create' type  %}"  method="POST" class="form-site" enctype="multipart/form-data">
     {%csrf_token%}
@@ -17,8 +20,9 @@
       {% endfor %}
     </p>
   {% endfor %}
-    <input type="submit" value="Create">
+    <input type="submit" class="btn btn-success" value="Create">
 </form>
+</div>
 <br>
 <hr>
 

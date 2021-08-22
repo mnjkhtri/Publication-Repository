@@ -2,21 +2,72 @@
 {% block content %}
 
 <div class='article'>
-    <a class="btn btn-secondary" href="{% url 'article:edit-data' type=type slug=article.slug %}">Edit</a>
-    <h2>TITLE:{{article.title}}</h2>
-    <p>Authors:{{article.getAuthors}}</p>
+    <h2>{{article.title}}</h2>
+    <p ><span class="article-headings"> Authors:</span>{{article.getAuthors}}</p>
+
     {% if article.journal %}
-    <p>Journal:{{article.journal}}</p>
+        <p ><span class="article-headings">Journal:</span>{{article.journal}}</p>
     {% endif %}
-    <p>Description:{{article.description}}</p>
-    <p>Pub Date:{{article.pub_date.year}}</p>
+
+    <p><span class="article-headings">Description:</span>{{article.description}}</p>
+    <p><span class="article-headings">Date:</span> {{article.pub_date.year}}</p>
+
     {% ifnotequal article.volume 0 %}
-    <p>Volume: {{article.volume}}</p>
+        <p ><span class="article-headings">Volume:</span> {{article.volume}}</p>
     {% endifnotequal %}
-    <p>Pages:{{article.pages}}</p>
+
+    {% ifnotequal article.page '' %}
+        <p><span class="article-headings">Pages:</span>{{article.pages}}</p>
+    {% endifnotequal %}
+
     {% if article.citations %}
-    <p>Citations:{{article.citations}}</p>
+        <p><span class="article-headings">Citations:</span>{{article.citations}}</p>
     {% endif %}
+
+    {% if article.publisher %}
+        <p><span class="article-headings">Publisher:</span>{{article.publisher}}</p>
+    {% endif %}
+
+    {% ifnotequal article.DOI '' %}
+        <p><span class="article-headings">DOI:</span>{{article.DOI}}</p>
+    {% endifnotequal %}
+
+    {% if article.journal_type %}
+        <p><span class="article-headings">Type:</span>{{article.journal_type}}</p>
+    {% endif %}
+
+    {% if article.impactFactor %}
+        {% ifnotequal article.impactFactor 0 %}
+            <p><span class="article-headings">Type:</span>{{article.impactFactor}}</p>
+        {% endifnotequal %}   
+    {% endif %}
+
+    {% if article.sjrRating %}
+        {% ifnotequal article.sjrRating 0 %}
+            <p><span class="article-headings">Type:</span>{{article.sjrRating}}</p>
+        {% endifnotequal %}
+    {% endif %}
+
+    {% if article.peer_reviewed %}       
+        <p><span class="article-headings">Is peer reviewed:</span>{{article.peer_reviewed}}</p>  
+    {% endif %}
+
+
+
+    {% if article.edition %}       
+        <p><span class="article-headings">Edition</span>{{article.edition}}</p>  
+    {% endif %}
+    {% if article.isbn %}       
+        <p><span class="article-headings">ISBN</span>{{article.isbn}}</p>  
+    {% endif %}
+
+
+    {% if article.conference_name %}       
+        <p><span class="article-headings">Book title</span><span class="article-body">{{article.conference_name}}</span></p>  
+    {% endif %}
+
+
+
     <a href="{{article.article_link}}">Link to article</a>
 </div>
 {% endblock %}

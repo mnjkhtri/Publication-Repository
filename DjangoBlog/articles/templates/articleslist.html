@@ -1,17 +1,19 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 {% if user.is_authenticated %}
+<div class="export-div ">
 <a href="{% url 'article:export-pdf' export_Format='MLA'%}" class="btn btn-dark">Export as MLA</a>
 
 <a href="{% url 'article:export-pdf' export_Format='APA'%}" class="btn btn-dark">Export as APA </a>
 <a href="{% url 'article:export-excel' %}" class="btn btn-dark">Export as Excel Sheet </a>
 <a href="{% url 'article:export-bibtex' %}" class="btn btn-dark">Export as Bibtex  </a>
+</div>
 {% endif %}
 <br>
 <br> 
-
 {% if messages %}
-<ul class="messages">
+<div class=" alert alert-dark messages">
+<ul>
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
         {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
@@ -19,6 +21,8 @@
     </li>
     {% endfor %}
 </ul>
+
+</div>
 {% endif %}
 
 
@@ -40,8 +44,8 @@
             <h2><a href="{% url 'article:detail' slug=book.slug %}">{{book.title}}</a></h2>
             <p>{{book.getAuthors}}</p>
             <p> {{book.pages}}</p>
-            <a class="btn btn-secondary" href="{% url 'article:edit-data' type='book' slug=article.slug %}">Edit</a>
-            <a class="btn btn-danger" href="{% url 'article:delete-data' type='book' slug=article.slug %}">Delete</a>
+            <a class="btn btn-secondary" href="{% url 'article:edit-data' type='Book' slug=book.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='Book' slug=book.slug %}">Delete</a>
 
         </div>
         {%endfor%}

@@ -82,10 +82,10 @@ def create_excelSheet(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
     # font_style.num_format_str = 'dd/mm/yyyy'
-    style2 =xlwt.XFStyle()
-    style2.num_format_str ='dd/mm/yyyy'
+    # style2 =xlwt.XFStyle()
+    # style2.num_format_str ='dd/mm/yyyy'
 
-    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors','journal','pub_date', 'volume', 'pages','article_link','journal_type','sjrRating','impactFactor','peer_reviewed','DOI')
+    journals = Article.objects.filter(author =request.user).values_list('title', 'co_authors','journal','pub_date__year', 'volume', 'pages','article_link','journal_type','sjrRating','impactFactor','peer_reviewed','DOI')
     print("the journals are-------------")
     print(journals)
 
@@ -95,7 +95,7 @@ def create_excelSheet(request):
         for col_num in range(len(row)):
             if col_num ==5: 
                 #date column
-                ws.write(row_num, col_num, row[col_num], style2)
+                ws.write(row_num, col_num, row[col_num], font_style)
             else:
                 ws.write(row_num, col_num, row[col_num], font_style)
 
@@ -112,16 +112,13 @@ def create_excelSheet(request):
     # Sheet body, remaining rows
     font_style = xlwt.XFStyle()
 
-    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date','volume','pages','conference_link','publisher','DOI')
+    conferences =ConferenceArticle.objects.filter(author=request.user).values_list('title','co_authors','conference_name','pub_date__year','volume','pages','conference_link','publisher','DOI')
     for row in conferences:
         row_num += 1
         for col_num in range(len(row)):
-            if col_num ==3: 
-                #date column
-                ws.write(row_num, col_num, row[col_num], style2)
-            else:
-                ws.write(row_num, col_num, row[col_num], font_style)
-
+            
+            ws.write(row_num, col_num, row[col_num], font_style)
+           
     wb.save(response)
     return response
     # return HttpResponse("this will be excel sheet export")
@@ -131,34 +128,67 @@ def create_BibtexSheet(request):
     print('bibtex from create bibtex')
     bib_entries = []
     conferences =ConferenceArticle.objects.filter(author =request.user)
+    books =Book.objects.filter(author=request.user)
     #export works fine for now but the missing fields and the default
     #fields are yet to be worked on
 
     for article in articles:
         bib_item ={
+            'title':article.title,
+            'author':article.co_authors,
             'journal':article.journal,
             'pages':article.pages,
-            'title':article.title,
             'volume':str(article.volume),
             'year':str(article.pub_date.year),
             'ID':article.journal_ID,
             'ENTRYTYPE': 'article'
 
         }
+        if article.volume!=0:
+            bib_item['volume'] =str(article.volume)
+        if article.pages !='':
+            bib_item['pages'] =article.pages
+        if article.publisher !='':
+            bib_item['publisher'] =article.publisher
+
         bib_entries.append(bib_item.copy())
     
     for conference in conferences:
         bib_item={
             
-            'pages':conference.pages,
             'title':conference.title,
-            'volume':str(conference.volume),
+            'author':conference.co_authors,
+            'book_title':conference.conference_name,
             'year':str(conference.pub_date.year),
             'ID':conference.conference_ID,
             'ENTRYTYPE': 'inproceedings'
 
         }
+        if conference.volume!=0:
+            bib_item['volume'] =str(conference.volume)
+        if conference.pages !='':
+            bib_item['pages'] =conference.pages
+        
         bib_entries.append(bib_item.copy())
+    
+    for book in books:
+        bib_item={
+            
+            'title':book.title,
+            'author':book.co_authors,
+            'pages':book.pages,
+            'volume':str(book.volume),
+            'year':str(book.pub_date.year),
+            'ID':book.book_ID,
+            'ENTRYTYPE': 'book'
+
+        }
+        if book.volume!=0:
+            bib_item['volume'] =str(book.volume)
+        if book.pages !='':
+            bib_item['pages'] =book.pages
+        bib_entries.append(bib_item.copy())
+
     db = BibDatabase()
     db.entries = bib_entries
     # [
@@ -218,6 +248,7 @@ def article_create(request, type):
         form = forms.CreateBook()
 
     if request.method == 'POST':
+        print(type)
         print("Post request")
         if type == 'journal':
             print("yes it is journal")
@@ -321,6 +352,18 @@ def bibtexPopulator(request):
                                 conference_ID =item.get('ID','' )
 
                             )
+                        elif item.get("ENTRYTYPE")=='book':
+                            #fields are yet to be populated
+                            print("book obtained")
+                            pubDate=datetime.date(int(item.get('year','1111')),1,1)
+                            new_obj =Book.objects.create(
+                                title =item.get('title'),
+                                co_authors=item.get('author'),
+                                pub_date=pubDate,
+                                author =request.user,
+                               
+
+                            )
                             # new_obj.save(commit=False)
                             # new_obj.author =request.user
                             new_obj.save()
@@ -341,10 +384,7 @@ def ProfilePage(request):
 
 def EditArticle(request,type,slug):
     print("type:"+type)
-    print('slug:'+slug)
-    
-    
-    
+    print('slug:'+slug)           
     if type == 'article':
         form_data =Article.objects.get(slug=slug)
         print('form data----------------')
@@ -357,7 +397,7 @@ def EditArticle(request,type,slug):
         form = forms.CreateConference(instance=form_data)
 
     elif type == 'Book':
-        form_data =ConferenceArticle.objects.get(slug=slug)
+        form_data =Book.objects.get(slug=slug)
         form = forms.CreateBook(instance=form_data)
 
     if request.method =="POST":
@@ -369,6 +409,12 @@ def EditArticle(request,type,slug):
 
         elif type =='conference':
             form =forms.CreateConference(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+
+        elif type =='Book':
+            form =forms.CreateBook(request.POST,instance=form_data)
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect(reverse('article:list'))
