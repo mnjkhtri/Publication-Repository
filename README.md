@@ -163,8 +163,8 @@ Bishal Bashyal - bishalbashyal33@gmail.com
 
 Dimple saraogi - example@gmail.com
 
-Bishal Katuwal - example@gmail.com
-
+Bishal Katuwal - bis3hal@gmail.com
+               - 075BCT028.bishal@pcampus.edu.np
 
 
 
