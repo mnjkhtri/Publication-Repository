@@ -159,7 +159,7 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 Janak Sharma  - janaksharma2075@gmail.com
 
-Bishal Bashyal - example@gmail.com
+Bishal Bashyal - bishalbashyal33@gmail.com
 
 Dimple saraogi - example@gmail.com
 
