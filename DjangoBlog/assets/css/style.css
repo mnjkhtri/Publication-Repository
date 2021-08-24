@@ -527,11 +527,20 @@ button:hover, a:hover {
   opacity: 0.7;
 }
 .messages{
+  background-color: rgb(20, 160, 20);
   
-  font-size: large;
-  color: rgb(56, 35, 35);
+  font-size: x-large;
+  text-align: center;
+  color: rgb(218, 202, 202);
+  border-radius: 10px;
 
 }
 .messages ul{
   list-style-type: none;
+}
+.alert-dark{
+  background-color: green;
+  width: 50%;
+  margin: auto;
+  padding: 0px;
 }

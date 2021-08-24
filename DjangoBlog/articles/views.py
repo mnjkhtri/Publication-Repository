@@ -138,7 +138,6 @@ def create_BibtexSheet(request):
             'author':article.co_authors,
             'journal':article.journal,
             'pages':article.pages,
-            'volume':str(article.volume),
             'year':str(article.pub_date.year),
             'ID':article.journal_ID,
             'ENTRYTYPE': 'article'
@@ -177,7 +176,6 @@ def create_BibtexSheet(request):
             'title':book.title,
             'author':book.co_authors,
             'pages':book.pages,
-            'volume':str(book.volume),
             'year':str(book.pub_date.year),
             'ID':book.book_ID,
             'ENTRYTYPE': 'book'
@@ -383,6 +381,7 @@ def ProfilePage(request):
 
 
 def EditArticle(request,type,slug):
+    
     print("type:"+type)
     print('slug:'+slug)           
     if type == 'article':
@@ -401,6 +400,7 @@ def EditArticle(request,type,slug):
         form = forms.CreateBook(instance=form_data)
 
     if request.method =="POST":
+        messages.info(request, 'Edit successful')
         if type =='article':
             form =forms.CreateArticle(request.POST,instance=form_data)
             if form.is_valid():

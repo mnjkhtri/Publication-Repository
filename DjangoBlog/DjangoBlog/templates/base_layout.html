@@ -38,7 +38,7 @@
 
         <div class="profile">
           <img src="{% static 'images/person_4.png' %}" alt="Image" class="img-fluid">
-          <h3 class="name">Aman Shakya</h3>
+          <h3 class="name">{{request.user.username}}</h3>
           <span class="country">Pulchowk Campus</span>
         </div>
         {% endif %}
