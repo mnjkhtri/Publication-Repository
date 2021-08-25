@@ -60,6 +60,16 @@
             <a class="btn btn-danger" href="{% url 'article:delete-data' type='conference' slug=article.slug %}">Delete</a>
         </div>
         {%endfor%}
+        {%for article in general_articles %}
+        <div class ='article'>
+            
+            <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
+            <p style="overflow: hidden;">{{article.getAuthors}}</p>
+            <p>{{article.conference_name}}, {{article.pages}}</p>
+            <a class="btn btn-secondary" href="{% url 'article:edit-data' type='general' slug=article.slug %}">Edit</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='general' slug=article.slug %}">Delete</a>
+        </div>
+        {%endfor%}
 
     </div>
    

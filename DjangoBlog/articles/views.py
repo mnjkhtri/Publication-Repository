@@ -3,7 +3,7 @@ from enum import auto
 from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.shortcuts import redirect, render
-from .models import Article,Book,ConferenceArticle
+from .models import Article,Book,ConferenceArticle, GeneralArticle
 from django.contrib.auth.decorators import login_required
 from .import forms
 from django.contrib import messages
@@ -217,10 +217,11 @@ def article_list(request):
         articles = Article.objects.filter(author=request.user).order_by('pub_date')
         books = Book.objects.filter(author =request.user)
         conference_articles=ConferenceArticle.objects.filter(author=request.user)
+        general_articles =GeneralArticle.objects.filter(author=request.user)
     else:
         return HttpResponseRedirect(reverse("accounts:signup"))
     return render(request, 'articleslist.html', {'articles': articles,
-    'books':books,'conference_article':conference_articles
+    'books':books,'conference_article':conference_articles,'general_articles':general_articles,
     })
 
 
@@ -244,6 +245,8 @@ def article_create(request, type):
 
     elif type == 'Book':
         form = forms.CreateBook()
+    elif type =='general':
+        form= forms.GeneralArticle()
 
     if request.method == 'POST':
         print(type)
@@ -256,6 +259,9 @@ def article_create(request, type):
             form = forms.CreateConference(request.POST)
         elif type == 'Book':
             form = forms.CreateBook(request.POST)
+        elif type == 'general':
+            form = forms.GeneralArticle(request.POST)
+
         # form = forms.CreateArticle(request.POST, request.FILES)
         if form.is_valid():
             instance = form.save(commit=False)
@@ -282,6 +288,10 @@ def article_detail(request, slug):
     elif ConferenceArticle.objects.filter(slug=slug).exists():
         type ='conference'
         article=ConferenceArticle.objects.get(slug=slug)
+    
+    elif GeneralArticle.objects.filter(slug=slug).exists():
+        type ='general'
+        article=GeneralArticle.objects.get(slug=slug)
 
     
     return render(request, 'article_obj.html', {'article': article,'type':type})
@@ -398,6 +408,10 @@ def EditArticle(request,type,slug):
     elif type == 'Book':
         form_data =Book.objects.get(slug=slug)
         form = forms.CreateBook(instance=form_data)
+    
+    elif type == 'general':
+        form_data =GeneralArticle.objects.get(slug=slug)
+        form = forms.GeneralArticle(instance=form_data)
 
     if request.method =="POST":
         messages.info(request, 'Edit successful')
@@ -415,6 +429,11 @@ def EditArticle(request,type,slug):
 
         elif type =='Book':
             form =forms.CreateBook(request.POST,instance=form_data)
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('article:list'))
+        elif type =='general':
+            form =forms.GeneralArticle(request.POST,instance=form_data)
             if form.is_valid():
                 form.save()
                 return HttpResponseRedirect(reverse('article:list'))
@@ -449,6 +468,14 @@ def DeleteArticle(request,type,slug):
         messages.info(request, 'one book deleted')
         print('deletion successful')
         return HttpResponseRedirect(reverse('article:list'))
+    
+    elif type == 'general':
+        item =get_object_or_404(GeneralArticle,slug =slug)
+        item.delete()
+        messages.info(request, 'one general article deleted')
+        print('deletion successful')
+        return HttpResponseRedirect(reverse('article:list'))
+
 
 
     return HttpResponse("<h1>Invalid item selected</h1>")

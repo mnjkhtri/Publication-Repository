@@ -12,6 +12,12 @@ class Article(models.Model): #this is like a table with fields
         ("National","National"),
         ("International","International")
     ]
+    QUARTILES =[
+        ('Q1','Q1'),
+        ('Q2','Q2'),
+        ('Q3','Q3'),
+        ('Q4','Q4'),
+    ]
     title = models.CharField(max_length=300)
     slug=models.SlugField()
     co_authors =models.CharField(max_length=300,help_text="enter coauthors seperated by and", default=None)
@@ -33,6 +39,7 @@ class Article(models.Model): #this is like a table with fields
     journal_type = models.CharField(max_length=20,choices=CHOICES,default='National')
     impactFactor =models.FloatField(default= 0)
     sjrRating =models.FloatField(default=0)
+    quartile =models.CharField(max_length=5,choices=QUARTILES,blank=True)
     peer_reviewed =models.BooleanField(default=False)
 
     #auto add slug before save
@@ -188,6 +195,79 @@ class ConferenceArticle(models.Model):
         if not self.slug:
             self.slug = slugify(self.title)
         super(ConferenceArticle, self).save(*args, **kwargs)
+
+    def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
+        return self.title
+
+    def getAuthors(self):
+        return self.co_authors
+    
+    def getMlaAuthors(self):
+        my_list= self.co_authors.split(' and')
+        count = len(my_list)
+        
+        if count ==1:
+            res =my_list[0].replace(' ','')+'.'
+            return res           
+        elif count==2:
+            res2=my_list[1].split(',')
+            if len(res2) ==1:
+                res=my_list[0].replace(' ',' ') + ',et.al.'
+            else:
+                res=my_list[0].replace(' ','')+',and'+res2[1]+res2[0]+'.'
+                
+            return res
+            
+
+        else:
+            return my_list[0].replace(' ','')+',et.al.'   
+
+        
+
+    def getApaAuthors(self):
+        new_list = self.co_authors.split(' and')
+        print(new_list)
+        result = ''
+        #need to generate user list in apa format
+        for item in new_list:
+            if item ==new_list[-1] and len(new_list)!=1:
+                #check if it is last element to append &
+                print('yes')
+                result +='& '
+            temp=item.split()
+            print(temp)
+            if len(temp)==3:
+                result+= temp[0]+temp[1][0]+'.'+temp[2][0]+'.,'
+            elif len(temp)==2:
+                result+= temp[0]+temp[1][0]+'.,'
+                
+            else:
+                continue
+                
+        
+        return result
+
+
+class GeneralArticle(models.Model):
+    title = models.CharField(max_length=400)
+    slug=models.SlugField()
+    co_authors =models.CharField(max_length=300,help_text="enter coauthors seperated by commas", default=None)
+    author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="generalArticle")
+    pub_date=models.DateField(blank=True,default=None)
+    volume=models.IntegerField(default=0)
+    pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
+    description =models.TextField(default="No description")
+    publisher =models.CharField(default=None,max_length=100)
+    general_ID =models.CharField(max_length=100, default='')
+    
+    conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
+    conference_link =models.URLField(blank=True)
+    DOI =models.CharField(max_length=100,blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super(GeneralArticle, self).save(*args, **kwargs)
 
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
         return self.title
