@@ -38,13 +38,13 @@
 
     {% if article.impactFactor %}
         {% ifnotequal article.impactFactor 0 %}
-            <p><span class="article-headings">Type:</span>{{article.impactFactor}}</p>
+            <p><span class="article-headings">Impact Factor:</span>{{article.impactFactor}}</p>
         {% endifnotequal %}   
     {% endif %}
 
     {% if article.sjrRating %}
         {% ifnotequal article.sjrRating 0 %}
-            <p><span class="article-headings">Type:</span>{{article.sjrRating}}</p>
+            <p><span class="article-headings">SJR Rating:</span>{{article.sjrRating}} {{article.quartile}}</p>
         {% endifnotequal %}
     {% endif %}
 

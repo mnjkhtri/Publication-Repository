@@ -15,7 +15,7 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/JanakSharma2055/Publication-Repository.git">View Demo</a>
+    <a href="https://mypubrepo.herokuapp.com/">View Demo</a>
     ·
     <a href="https://github.com/JanakSharma2055/Publication-Repository.git">Report Bug</a>
     ·
@@ -62,7 +62,7 @@ This is the project by student group of 075BCTAB. A software engineering project
 
 ### Built With
 
-This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+These are major dependencies for our project
 * [Bootstrap](https://getbootstrap.com)
 * [Python](https://docs.python.org/3/)
 * [Django](https://docs.djangoproject.com/en/3.2/)
@@ -73,6 +73,7 @@ This section should list any major frameworks that you built your project using.
 ## Getting Started
 
 You can run this project locally.
+### Or you can check demo from above view demo link
 
 ## Prerequisites
 

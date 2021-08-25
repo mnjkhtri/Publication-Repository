@@ -17,7 +17,7 @@ class CreateArticle(forms.ModelForm):
     class Meta:
         model = models.Article
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','journal_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -74,11 +74,11 @@ class CreateArticle(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),
-            'journal_ID':widgets.TextInput(attrs={
-                'class': "form-control",
-                'style': 'min-width: 500px;',
-                }),
+            
             'journal_type':forms.Select(attrs={
+                'class':'form-control'}),
+
+            'quartile':forms.Select(attrs={
                 'class':'form-control'}),
 
             'impactFactor':widgets.NumberInput(attrs={
@@ -111,7 +111,7 @@ class CreateBook(forms.ModelForm):
     class Meta:
         model = models.Book
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','book_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -133,7 +133,7 @@ class CreateBook(forms.ModelForm):
             'volume':widgets.NumberInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
-                'placeholder': 'authors'
+                'placeholder': 'volume'
                 }),
             'issue':widgets.NumberInput(attrs={
                 'class': "form-control",
@@ -164,10 +164,7 @@ class CreateBook(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),
-            'book_ID':widgets.TextInput(attrs={
-                'class': "form-control",
-                'style': 'min-width: 500px;',
-                }),
+            
             'edition':widgets.TextInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
@@ -190,7 +187,7 @@ class CreateConference(forms.ModelForm):
     class Meta:
         model = models.ConferenceArticle
         fields ='__all__'
-        exclude =['slug','author']
+        exclude =['slug','author','conference_ID']
         widgets={
             "pub_date": DateInput(attrs={
                 'class': "form-control",
@@ -242,10 +239,66 @@ class CreateConference(forms.ModelForm):
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),  
-            'conference_ID':widgets.TextInput(attrs={
+           
+            }
+
+class GeneralArticle(forms.ModelForm):
+    class Meta:
+        model = models.GeneralArticle
+        fields ='__all__'
+        exclude =['slug','author','general_ID']
+        widgets={
+            "pub_date": DateInput(attrs={
+                'class': "form-control",
+                'style': 'max-width: 200px;',
+                'placeholder': 'title'
+               
+            }),
+            'title': TextInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                'placeholder': 'title'
+                }),
+            'co_authors': TextInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                'placeholder': 'authors'
+                }),
+            
+            'volume':widgets.NumberInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                'placeholder': 'authors'
+                }),
+            
+            'pages':widgets.TextInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                'placeholder': 'Pages in the form 22-33'
+                }),
+            'description': widgets.Textarea(attrs={
+                'class':'form-control',
+                'rows':3
+                    }),
+            
+            'publisher':widgets.TextInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                }),
+
+            'conference_link':widgets.URLInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                }),
+            'DOI':widgets.TextInput(attrs={
+                'class': "form-control",
+                'style': 'min-width: 500px;',
+                }),
+            'conference_name':widgets.TextInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
                 }),  
+           
             }
 
 

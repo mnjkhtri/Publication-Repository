@@ -38,7 +38,7 @@
 
         <div class="profile">
           <img src="{% static 'images/person_4.png' %}" alt="Image" class="img-fluid">
-          <h3 class="name">Aman Shakya</h3>
+          <h3 class="name">{{request.user.username}}</h3>
           <span class="country">Pulchowk Campus</span>
         </div>
         {% endif %}
@@ -63,6 +63,7 @@
               <div id="collapseTwo" class="collapse" aria-labelledby="headingOne">
                 <div>
                   <ul>
+                    <li><a href="{% url 'article:create' type='general'%}"><span class="icon-book mr-3"></span>General</a></li>
                     <li><a href="{% url 'article:create' type='journal'%}"><span class="icon-book mr-3"></span>Journal</a></li>
                     <li><a href="{% url 'article:create' type='conference'%}"><span class="icon-book mr-3"></span>Conference</a></li>
                     <li><a href="{% url 'article:create' type='Book'%}"><span class="icon-book mr-3"></span>Book</a></li>
