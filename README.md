@@ -15,7 +15,7 @@
     <br />
     <br />
     <br />
-    <a href="https://github.com/JanakSharma2055/Publication-Repository.git">View Demo</a>
+    <a href="https://mypubrepo.herokuapp.com/">View Demo</a>
     ·
     <a href="https://github.com/JanakSharma2055/Publication-Repository.git">Report Bug</a>
     ·
