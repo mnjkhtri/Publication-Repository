@@ -111,7 +111,7 @@ class Book(models.Model):
     author=models.ForeignKey(User,default=None,on_delete=models.DO_NOTHING,related_name="books")
     co_authors =models.CharField(max_length=200,help_text="enter coauthors seperated by commas", default=None)
     book_ID =models.CharField(max_length=100, default='')
-
+    pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
 
     edition = models.CharField(max_length=50, null=True, blank=True)
     isbn = models.CharField(max_length=50, null=True, blank=True)

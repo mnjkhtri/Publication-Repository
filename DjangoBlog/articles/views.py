@@ -181,8 +181,6 @@ def create_BibtexSheet(request):
             'ENTRYTYPE': 'book'
 
         }
-        if book.volume!=0:
-            bib_item['volume'] =str(book.volume)
         if book.pages !='':
             bib_item['pages'] =book.pages
         bib_entries.append(bib_item.copy())
