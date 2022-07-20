@@ -30,6 +30,7 @@ urlpatterns = [
     path('profile',views.ProfilePage, name='profile'),
     path('<str:type>/<str:slug>/edit',views.EditArticle, name="edit-data"),
     path('<str:type>/<str:slug>/delete',views.DeleteArticle, name="delete-data"),
+    path('<str:type>/<str:slug>/update',views.UpdateArticle, name = "update_data"),
     url('showArticle/(?P<slug>[\w-]+)',views.article_detail,name='detail'), 
     #name catching block in the url
    

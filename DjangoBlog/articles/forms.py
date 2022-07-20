@@ -92,6 +92,7 @@ class CreateArticle(forms.ModelForm):
                 'style': 'min-width: 500px;',
                 
                 }),
+            'version':forms.HiddenInput(),
             'peer_reviewed':widgets.CheckboxInput(attrs={
                'style':'padding:5px;',
             })
@@ -124,6 +125,7 @@ class CreateBook(forms.ModelForm):
                 'style': 'min-width: 500px;',
                 'placeholder': 'title'
                 }),
+            'version':forms.HiddenInput(),
             'co_authors': TextInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
@@ -195,6 +197,7 @@ class CreateConference(forms.ModelForm):
                 'placeholder': 'title'
                
             }),
+
             'title': TextInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
@@ -205,7 +208,7 @@ class CreateConference(forms.ModelForm):
                 'style': 'min-width: 500px;',
                 'placeholder': 'authors'
                 }),
-            
+            'version':forms.HiddenInput(),           
             'volume':widgets.NumberInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',
@@ -264,7 +267,7 @@ class GeneralArticle(forms.ModelForm):
                 'style': 'min-width: 500px;',
                 'placeholder': 'authors'
                 }),
-            
+             'version':forms.HiddenInput(),
             'volume':widgets.NumberInput(attrs={
                 'class': "form-control",
                 'style': 'min-width: 500px;',

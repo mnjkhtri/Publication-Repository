@@ -33,7 +33,6 @@
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
             <p >{{article.getAuthors}}</p>
             <p>{{article.journal}} {{article.pages}}</p>
-            <a class="btn btn-primary" href="{% url 'article:edit-data' type='article' slug=article.slug %}">Edit</a>
 			<a class="btn btn-secondary" href="{% url 'article:update_data' type='article' slug=article.slug %}">Update</a>
             <a class="btn btn-danger" href="{% url 'article:delete-data' type='article' slug=article.slug %}">Delete</a>
 
@@ -45,9 +44,8 @@
             <h2><a href="{% url 'article:detail' slug=book.slug %}">{{book.title}}</a></h2>
             <p>{{book.getAuthors}}</p>
             <p> {{book.pages}}</p>
-            <a class="btn btn-primary" href="{% url 'article:edit-data' type='Book' slug=book.slug %}">Edit</a>
-			<a class="btn btn-secondary" href="{% url 'article:update_data' type='Book' slug=book.slug %}">Update</a>
-            <a class="btn btn-danger" href="{% url 'article:delete-data' type='Book' slug=book.slug %}">Delete</a>
+			<a class="btn btn-secondary" href="{% url 'article:update_data' type='book' slug=book.slug %}">Update</a>
+            <a class="btn btn-danger" href="{% url 'article:delete-data' type='book' slug=book.slug %}">Delete</a>
 
         </div>
         {%endfor%}
@@ -58,7 +56,6 @@
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
             <p style="overflow: hidden;">{{article.getAuthors}}</p>
             <p>{{article.conference_name}}, {{article.pages}}</p>
-            <a class="btn btn-primary" href="{% url 'article:edit-data' type='conference' slug=article.slug %}">Edit</a>
 			<a class="btn btn-secondary" href="{% url 'article:update_data' type='conference' slug=article.slug %}">Update</a>
             <a class="btn btn-danger" href="{% url 'article:delete-data' type='conference' slug=article.slug %}">Delete</a>
         </div>
@@ -69,7 +66,6 @@
             <h2><a href="{% url 'article:detail' slug=article.slug %}">{{article.title}}</a></h2>
             <p style="overflow: hidden;">{{article.getAuthors}}</p>
             <p>{{article.conference_name}}, {{article.pages}}</p>
-            <a class="btn btn-primary" href="{% url 'article:edit-data' type='general' slug=article.slug %}">Edit</a>
 			<a class="btn btn-secondary" href="{% url 'article:update_data' type='general' slug=article.slug %}">Update</a>
             <a class="btn btn-danger" href="{% url 'article:delete-data' type='general' slug=article.slug %}">Delete</a>
         </div>

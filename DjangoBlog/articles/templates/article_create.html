@@ -8,7 +8,10 @@
 
 <form action="{% url 'article:create' type  %}"  method="POST" class="form-site" enctype="multipart/form-data">
     {%csrf_token%}
-    {% for field in form %}
+	{% for hidden in form.hidden_fields %}
+	{{hidden}}
+	{% endfor %}
+    {% for field in form.visible_fields %}
     <p>
       {{ field.label_tag }}<br>
       {{ field }}

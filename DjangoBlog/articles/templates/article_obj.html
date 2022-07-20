@@ -68,11 +68,15 @@
     {% endif %}
 
 
-
-
-    <a href="{{article.article_link}} class = "link-info">View Article</a>
-	<br/>
-	<a class="link-primary" href="{% url 'article:edit-data' type=type slug=article.slug %}">Edit</a>
+    {% if article.article_link %}
+    	<a href="{{article.article_link}} class = "link-info">View Article</a>
+	{% else %}
+		<a href = "#" class = "link-info">View Article</a>
+	{% endif %}
+	
+	 <div class = "text-right">
+		<a class="btn btn-outline-primary" href="{% url 'article:edit-data' type=type slug=article.slug %}">Edit</a>
+	</div>
 </div>
 {%endfor%}
 {% endblock %}

@@ -1,3 +1,4 @@
+from sys import version
 from django.db import models
 from django.db.models.base import Model
 from django.contrib.auth.models import User
@@ -25,6 +26,7 @@ class Article(models.Model): #this is like a table with fields
     pub_date=models.DateField(blank=True,default=None)#some donot have months, need fixation, can be done with integer field
     journal =models.CharField(max_length=100,blank=True)
     volume=models.IntegerField(default=0)
+    version = models.FloatField(default=1.0)
     issue =models.IntegerField(default=0)
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
     
@@ -33,7 +35,7 @@ class Article(models.Model): #this is like a table with fields
     publisher =models.CharField(default=None,max_length=100)
     article_link =models.URLField(blank=True)
     DOI =models.CharField(max_length=100,blank=True)
-    journal_ID =models.CharField(max_length=100, default='')
+    journal_ID =models.AutoField(primary_key=True)
 
     #journal specific-----
     journal_type = models.CharField(max_length=20,choices=CHOICES,default='National')
@@ -45,7 +47,8 @@ class Article(models.Model): #this is like a table with fields
     #auto add slug before save
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            temp = str(self.title) + str(self.version)
+            self.slug = slugify(temp)
         super(Article, self).save(*args, **kwargs)
 
     def getAuthors(self):
@@ -113,6 +116,7 @@ class Book(models.Model):
     book_ID =models.CharField(max_length=100, default='')
     pages =models.CharField(max_length=50,help_text="must be in form nn--nn",blank=True)
 
+    version = models.FloatField(default=1.0)
     edition = models.CharField(max_length=50, null=True, blank=True)
     isbn = models.CharField(max_length=50, null=True, blank=True)
     chapters = models.CharField(max_length=50, null=True, blank=True)
@@ -121,7 +125,8 @@ class Book(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            temp = str(self.title)+str(self.version)
+            self.slug = slugify(temp)
         super(Book, self).save(*args, **kwargs)
 
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
@@ -187,13 +192,15 @@ class ConferenceArticle(models.Model):
     publisher =models.CharField(default=None,max_length=100)
     conference_ID =models.CharField(max_length=100, default='')
     
+    version = models.FloatField(default=1.0)
     conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
     conference_link =models.URLField(blank=True)
     DOI =models.CharField(max_length=100,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            temp = str(self.title) + str(self.version)
+            self.slug = slugify(temp)
         super(ConferenceArticle, self).save(*args, **kwargs)
 
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title
@@ -260,13 +267,15 @@ class GeneralArticle(models.Model):
     publisher =models.CharField(default=None,max_length=100)
     general_ID =models.CharField(max_length=100, default='')
     
+    version = models.FloatField(default = 1.0)
     conference_name = models.CharField(max_length=200, null=True, blank=True)#booktitle
     conference_link =models.URLField(blank=True)
     DOI =models.CharField(max_length=100,blank=True)
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            self.slug = slugify(self.title)
+            temp = str(self.title) + str(self.version)
+            self.slug = slugify(temp)
         super(GeneralArticle, self).save(*args, **kwargs)
 
     def __str__(self): #whenever string version of the instance of this class is demanded, it will return the title

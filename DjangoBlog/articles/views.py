@@ -1,4 +1,4 @@
-
+from django.db.models import Count,Min,Max 
 from enum import auto
 from django.http.response import FileResponse, HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -50,8 +50,7 @@ def create_pdf(request,export_Format):
     html = template.render(context)
 
     # create a pdf
-    pisa_status = pisa.CreatePDF(
-       html, dest=response)
+    pisa_status = pisa.CreatePDF(html, dest=response)
     # if error then show some funy view
     if pisa_status.err:
        return HttpResponse('We had some errors <pre>' + html + '</pre>')
@@ -139,7 +138,7 @@ def create_BibtexSheet(request):
             'journal':article.journal,
             'pages':article.pages,
             'year':str(article.pub_date.year),
-            'ID':article.journal_ID,
+            'ID':str(article.journal_ID),
             'ENTRYTYPE': 'article'
 
         }
@@ -212,15 +211,39 @@ def create_BibtexSheet(request):
 
 def article_list(request):
     if request.user.is_authenticated:
-        articles = Article.objects.filter(author=request.user).order_by('pub_date')
-        books = Book.objects.filter(author =request.user)
-        conference_articles=ConferenceArticle.objects.filter(author=request.user)
-        general_articles =GeneralArticle.objects.filter(author=request.user)
+       distincts = Article.objects.filter(author = request.user).values('title').annotate(slug = Max('slug'))
+       articles = Article.objects.filter(slug__in = [item['slug'] for item in distincts])
+
+       distincts = Book.objects.filter(author = request.user).values('title').annotate(slug = Max('slug'))
+       books = Book.objects.filter(slug__in = [item['slug'] for item in distincts])
+
+
+       distincts = ConferenceArticle.objects.filter(author=request.user).values('title').annotate(slug = Max('slug'))
+       conference_articles = ConferenceArticle.objects.filter(slug__in = [item['slug'] for item in distincts])
+
+       distincts = GeneralArticle.objects.filter(author = request.user).values('title').annotate(slug = Max('slug'))
+       general_articles = GeneralArticle.objects.filter(slug__in = [item['slug'] for item in distincts])
+
     else:
         return HttpResponseRedirect(reverse("accounts:signup"))
     return render(request, 'articleslist.html', {'articles': articles,
     'books':books,'conference_article':conference_articles,'general_articles':general_articles,
     })
+
+
+
+
+#def article_list(request):
+#    if request.user.is_authenticated:
+#       articles = Article.objects.filter(author=request.user).order_by('pub_date')
+#       books = Book.objects.filter(author =request.user)
+#       conference_articles=ConferenceArticle.objects.filter(author=request.user)
+#      general_articles =GeneralArticle.objects.filter(author=request.user)
+#    else:
+#        return HttpResponseRedirect(reverse("accounts:signup"))
+#    return render(request, 'articleslist.html', {'articles': articles,
+#    'books':books,'conference_article':conference_articles,'general_articles':general_articles,
+#    })
 
 
 @login_required(login_url='accounts:login')
@@ -276,23 +299,27 @@ def article_detail(request, slug):
     # return HttpResponse(slug)
    # form = forms.CreateArticle()
     
-    if Article.objects.filter(slug=slug).exists():
+    if  Article.objects.filter(slug=slug).exists():
+        temp = Article.objects.get(slug=slug)
         type ='article'
-        article =Article.objects.get(slug=slug)
+        articles =Article.objects.filter(title = temp.title).order_by('version')
     elif Book.objects.filter(slug=slug).exists():
+        temp = Book.objects.get(slug = slug)
         type ='book'
-        article=Book.objects.get(slug=slug)
+        articles=Book.objects.filter(title = temp.title).order_by('version')
 
     elif ConferenceArticle.objects.filter(slug=slug).exists():
+        temp = ConferenceArticle.objects.get(slug = slug)
         type ='conference'
-        article=ConferenceArticle.objects.get(slug=slug)
+        articles=ConferenceArticle.objects.filter(title=temp.title).order_by('version')
     
     elif GeneralArticle.objects.filter(slug=slug).exists():
+        temp = GeneralArticle.objects.get(slug = slug)
         type ='general'
-        article=GeneralArticle.objects.get(slug=slug)
+        articles=GeneralArticle.objects.filter(title=temp.title).order_by('version')
 
     
-    return render(request, 'article_obj.html', {'article': article,'type':type})
+    return render(request, 'article_obj.html', {'articles': articles,'type':type})
 
 
 def readbibtex(f):
@@ -397,13 +424,13 @@ def EditArticle(request,type,slug):
         print('form data----------------')
         print(form_data)
         print("yes it is journal")
-        form = forms.CreateArticle(instance=form_data)
+        form = forms.CreateArticle(instance = form_data)
 
     elif type == 'conference':
         form_data =ConferenceArticle.objects.get(slug=slug)
         form = forms.CreateConference(instance=form_data)
 
-    elif type == 'Book':
+    elif type == 'book':
         form_data =Book.objects.get(slug=slug)
         form = forms.CreateBook(instance=form_data)
     
@@ -425,7 +452,7 @@ def EditArticle(request,type,slug):
                 form.save()
                 return HttpResponseRedirect(reverse('article:list'))
 
-        elif type =='Book':
+        elif type =='book':
             form =forms.CreateBook(request.POST,instance=form_data)
             if form.is_valid():
                 form.save()
@@ -447,29 +474,37 @@ def EditArticle(request,type,slug):
 def DeleteArticle(request,type,slug):
     #objection deletion logic here
     if type == 'article':
-        item =get_object_or_404(Article,slug =slug)
-        item.delete()
+        items =get_object_or_404(Article,slug =slug)
+        items = Article.objects.filter(title = items.title)
+        for item in items:
+            item.delete()
         messages.info(request, 'one article deleted')
         print('deletion successful')
         return HttpResponseRedirect(reverse('article:list'))
 
     elif type == 'conference':
-        item =get_object_or_404(ConferenceArticle,slug =slug)
-        item.delete()
+        items =get_object_or_404(ConferenceArticle,slug =slug)
+        items = ConferenceArticle.objects.filter(title = items.title)
+        for item in items:
+            item.delete()
         messages.info(request, 'one conference deleted')
         print('deletion successful')
         return HttpResponseRedirect(reverse('article:list'))
 
-    elif type == 'Book':
-        item =get_object_or_404(Book,slug =slug)
-        item.delete()
+    elif type == 'book':
+        items =get_object_or_404(Book,slug =slug)
+        items = Book.objects.filter(title = items.title)
+        for item in items:
+            item.delete()
         messages.info(request, 'one book deleted')
         print('deletion successful')
         return HttpResponseRedirect(reverse('article:list'))
     
     elif type == 'general':
-        item =get_object_or_404(GeneralArticle,slug =slug)
-        item.delete()
+        items =get_object_or_404(GeneralArticle,slug =slug)
+        items = GeneralArticle.objects.filter(title = items.title)
+        for item in items:
+            item.delete()
         messages.info(request, 'one general article deleted')
         print('deletion successful')
         return HttpResponseRedirect(reverse('article:list'))
@@ -477,3 +512,68 @@ def DeleteArticle(request,type,slug):
 
 
     return HttpResponse("<h1>Invalid item selected</h1>")
+
+
+def UpdateArticle(request, type , slug):
+
+    if type == 'article':
+        form_data =Article.objects.get(slug=slug)
+        print('form data----------------')
+        print(form_data)
+        print("yes it is journal")
+        form = forms.CreateArticle({"title":form_data.title,"version":form_data.version+1})
+
+    elif type == 'conference':
+        form_data =ConferenceArticle.objects.get(slug=slug)
+        form = forms.CreateConference({"title":form_data.title,"version":form_data.version+1})
+
+    elif type == 'book':
+        form_data =Book.objects.get(slug=slug)
+        form = forms.CreateBook({"title":form_data.title,"version":form_data.version+1})
+    
+    elif type == 'general':
+        form_data =GeneralArticle.objects.get(slug=slug)
+        form = forms.GeneralArticle({"title":form_data.title,"version":form_data.version+1})
+
+    if request.method =="POST":
+        messages.info(request, 'Update successful')
+        if type =='article':
+            form =forms.CreateArticle(request.POST)
+            if form.is_valid():
+                instance = form.save(commit = False)
+                instance.author = request.user 
+                instance.save()
+                return HttpResponseRedirect(reverse('article:list'))
+
+        elif type =='conference':
+            form =forms.CreateConference(request.POST)
+            if form.is_valid():
+                instance = form.save(commit = False)
+                instance.author = request.user
+                instance.save()
+                return HttpResponseRedirect(reverse('article:list'))
+
+        elif type =='book':
+            form =forms.CreateBook(request.POST)
+            if form.is_valid():
+                instance = form.save(commit = False)
+                instance.author = request.user
+                instance.save()
+                return HttpResponseRedirect(reverse('article:list'))
+        elif type =='general':
+            form =forms.GeneralArticle(request.POST)
+            if form.is_valid():
+                instance = form.save(commit = False)
+                instance.author = request.user
+                instance.save()
+                return HttpResponseRedirect(reverse('article:list'))
+        
+        print(request.POST)
+
+
+    
+    # print(form)
+    return render(request,"update.html",{"form":form,"type":type,
+    'slug':slug})
+ 
+
