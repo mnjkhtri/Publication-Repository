@@ -1,8 +1,9 @@
 {% extends 'base_layout.html' %}
 {% block content %}
 
+{% for article in articles %}
 <div class='article'>
-    <h2>{{article.title}}</h2>
+	<h2>{{article.title}} <small>{{article.version}}</small></h2>
     <p ><span class="article-headings"> Authors:</span>{{article.getAuthors}}</p>
 
     {% if article.journal %}
@@ -68,6 +69,10 @@
 
 
 
-    <a href="{{article.article_link}}">Link to article</a>
+
+    <a href="{{article.article_link}} class = "link-info">View Article</a>
+	<br/>
+	<a class="link-primary" href="{% url 'article:edit-data' type=type slug=article.slug %}">Edit</a>
 </div>
+{%endfor%}
 {% endblock %}
